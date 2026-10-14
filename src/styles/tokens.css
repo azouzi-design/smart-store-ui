@@ -1,0 +1,33 @@
+/*
+ * Design tokens extracted from the live Price Chopper "Scan an item" page
+ * (https://…lambda-url…/allas/s1/scan) on 2026-10-14.
+ * SOURCE OF TRUTH: change values here, never hardcode them in pages.
+ * Tokens marked PROPOSED are ours, not inherited from the live site.
+ */
+@theme {
+  /* Brand — inherited */
+  --color-brand: #0d6efd;          /* primary buttons, headings, links */
+  --color-brand-link: #0b5acf;     /* "Change store" style links */
+  --color-brand-deep: #0a4fb6;     /* footer background */
+  --color-accent: #ba121c;         /* pills, info bar */
+  --color-badge: #e5484d;          /* cart / list count badges */
+
+  /* Neutrals — inherited */
+  --color-ink: #262626;
+  --color-muted: #737373;
+  --color-surface: #ffffff;
+  --color-field: #efefef;
+
+  /* Type — inherited */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-plex-serif), Georgia, serif;
+  --font-script: var(--font-cookie), cursive;
+
+  /* Radii — inherited (button 10, small button 8, pill 999) */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+
+  /* Layout — inherited */
+  --container-page: 1136px;
+}
