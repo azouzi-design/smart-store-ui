@@ -8,8 +8,11 @@ export const store = {
 
 export const user = { name: "Sam", listCount: 1, cartCount: 152 };
 
-/** Item count shown in the results line and "View all" (live shows 114). */
-export const totalItems = 30;
+/** Item count shown in the results line and "View all" — matches the live page. */
+export const totalItems = 114;
+
+/** The homepage previews only the first three rows (4 per row on desktop). */
+export const previewCount = 12;
 
 export const departments = [
   "Recommended For You",

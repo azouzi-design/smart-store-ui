@@ -1,6 +1,6 @@
 import { ArrowRight, ArrowUpDown, ChevronDown, ChevronRight, Funnel, Plus } from "lucide-react";
 import Image from "next/image";
-import { departments, products, totalItems, type Product } from "../_data";
+import { departments, previewCount, products, totalItems, type Product } from "../_data";
 
 function ProductImage({ name, src }: { name: string; src: string }) {
   return (
@@ -80,18 +80,18 @@ export function Departments() {
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
-        {products.map((p) => (
+        {products.slice(0, previewCount).map((p) => (
           <ProductCard key={p.name} p={p} />
         ))}
       </div>
 
       <div className="mt-7 flex justify-center">
-        <a
-          href="#"
+        <button
+          type="button"
           className="flex h-10 items-center gap-2 rounded-pill border-[1.5px] border-brand bg-surface px-[22px] text-copy font-bold text-brand"
         >
           View all {totalItems} items <ArrowRight size={15} aria-hidden />
-        </a>
+        </button>
       </div>
     </section>
   );
