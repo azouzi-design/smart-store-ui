@@ -5,6 +5,13 @@ body {
   background: var(--color-surface);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  line-height: normal; /* the live site never sets a global line-height */
+}
+
+/* Live site clips sideways overflow rather than scrolling */
+html,
+body {
+  overflow-x: clip;
 }
 
 :focus-visible {

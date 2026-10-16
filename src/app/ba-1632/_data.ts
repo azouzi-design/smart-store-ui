@@ -11,8 +11,8 @@ export const user = { name: "Sam", listCount: 1, cartCount: 152 };
 /** Item count shown in the results line and "View all" — matches the live page. */
 export const totalItems = 114;
 
-/** The homepage previews only the first three rows (4 per row on desktop). */
-export const previewCount = 12;
+/** Cards rendered: three rows of the widest (5-column) grid; narrower grids hide the extra rows. */
+export const previewCount = 15;
 
 export const departments = [
   "Recommended For You",

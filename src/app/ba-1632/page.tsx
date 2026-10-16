@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 
 /**
  * Faithful (inherited) rebuild of the live homepage — the "before" baseline.
- * Images come from the live site (public/live); all data is mock (see ./_data.ts).
+ * Layout and type follow the live stylesheet; images come from the live site
+ * (public/live); all data is mock (see ./_data.ts).
  */
 export default function Page() {
   return (
@@ -21,14 +22,15 @@ export default function Page() {
       <InfoBar />
 
       <div className="relative">
-        {/* Store photo at 15% opacity, fading to white — as on the live page */}
+        {/* .home-clean .page-bg: store photo at 15% opacity, fading out from 72% */}
         <div
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[685px] opacity-15 [mask-image:linear-gradient(to_bottom,black_60%,transparent)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[clamp(520px,64vw,900px)] opacity-15 [mask-image:linear-gradient(180deg,#000_72%,transparent)]"
         >
           <Image src="/live/hero-bg.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
         </div>
-        <main className="relative mx-auto max-w-site px-8">
+        {/* flex-col: live sections sit in grid cells, so their margins add up instead of collapsing */}
+        <main className="relative mx-auto flex w-full max-w-site flex-col px-[clamp(14px,4vw,32px)]">
           <Hero />
           <PromoCards />
           <Departments />

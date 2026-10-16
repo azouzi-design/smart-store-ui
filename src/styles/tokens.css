@@ -33,12 +33,12 @@
 }
 
 /*
- * Homepage additions (BA-1632) — all INHERITED, measured from the
- * live homepage on 2026-10-14 (1070px viewport). Values marked ~ are estimates.
+ * Homepage additions (BA-1632) — all INHERITED, taken from the
+ * live homepage stylesheet and runtime theme variables (2026-10-16).
  */
 @theme {
   /* Color */
-  --color-accent-deep: #980f17;    /* store info bar */
+  --color-accent-deep: #990f17;    /* store info bar: mix(nav 82%, #000) */
   --color-success: #1da118;        /* prices, SALE tag, "Sales Ad" button */
   --color-success-deep: #1b7f3b;   /* "Shop Today" label */
   --color-violet: #6d4bce;         /* "Learn More" button */
@@ -48,8 +48,8 @@
   --color-ad-tag: #6b5a2e;         /* "RMN ad placement" label */
   --color-body: #353535;           /* hero copy */
   --color-line: #e5e5e5;
-  --color-line-faint: #f0f0f0;     /* header + search borders (~f5/f0) */
-  --color-soft: #fafafa;           /* trust strip band */
+    --color-soft: #faf5e1;           /* --c-soft (close-button hover) */
+  --color-search-text: #14261a;
   --color-tint: #eef5ff;           /* "For you" panel header */
   --color-unit: #7d867f;           /* per-unit price */
 
@@ -61,11 +61,12 @@
   --text-label: 13px;
   --text-ui: 13.5px;
   --text-copy: 14px;
+  --text-md: 16px;
   --text-lead: 15px;
   --text-panel: 17px;
-  --text-card-title: 20.33px;
-  --text-h2: 34px;
-  --text-hero: clamp(26px, 3.1vw, 44px); /* ~ live was 33.17px at 1070px */
+  --text-card-title: clamp(18px, 1.9vw, 24px);
+  --text-h2: clamp(24px, 3.4vw, 34px);
+  --text-hero: clamp(28px, 3.1vw, 42px);
 
   /* Radii */
   --radius-xs: 6px;
@@ -84,6 +85,6 @@
   --shadow-panel: -14px 12px 40px rgb(15 30 40 / 0.22);
   --shadow-tab: -4px 6px 18px rgb(0 0 0 / 0.22);
 
-  /* Layout: content is 1152 wide + 32px gutters */
-  --container-site: 1216px;
+  /* Layout: --maxw on the live site */
+  --container-site: 1200px;
 }

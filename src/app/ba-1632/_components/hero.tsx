@@ -1,95 +1,94 @@
 import { MapPin, Newspaper, Ticket } from "lucide-react";
 import Image from "next/image";
 import { user } from "../_data";
+import { Swoosh } from "./swoosh";
+
+// Mirrors the live .hero-clean / .hero-cta / .promo-tiles / .ptile-* rules.
+
+const cta =
+  "inline-flex items-center gap-[9px] rounded-pill px-[26px] py-[13px] text-[clamp(14px,1.3vw,15.5px)] font-bold leading-none text-white shadow-pill hover:brightness-[1.06] max-[720px]:px-[18px] max-[720px]:py-3 max-[720px]:text-copy";
 
 export function Hero() {
   return (
-    <section className="px-4 pb-[37px] pt-[43px] text-center">
-      <p className="font-serif text-base font-semibold text-body">Good afternoon, {user.name}!</p>
-      <h1 className="mt-1 font-serif text-hero font-bold leading-[1.08] tracking-[-0.01em] text-ink">
-        What are we{" "}
-        <span className="font-script text-[1.32em] font-normal text-success">Shopping</span> for
-        today?
-      </h1>
-      <p className="mx-auto mt-2 max-w-[520px] text-base text-body">
-        Your AI grocery assistant for meal ideas, savings, recipes, and stress-free shopping.
-      </p>
-      <div className="mt-7 flex flex-wrap justify-center gap-3.5">
-        <a
-          href="#"
-          className="flex items-center gap-2 rounded-pill bg-success px-[26px] py-[13px] text-copy font-bold leading-[14px] text-white shadow-pill"
-        >
-          <Newspaper size={15} aria-hidden /> This week&apos;s Sales Ad
-        </a>
-        <a
-          href="#"
-          className="flex items-center gap-2 rounded-pill bg-brand px-[26px] py-[13px] text-copy font-bold leading-[14px] text-white shadow-pill"
-        >
-          <Ticket size={15} aria-hidden /> This week&apos;s Coupons
-        </a>
+    <section className="flex min-h-[clamp(200px,24vw,300px)] flex-col justify-center px-4 pb-[clamp(24px,3.5vw,44px)] pt-[clamp(26px,4vw,52px)] text-center max-[720px]:min-h-0 max-[720px]:px-3.5 max-[720px]:pb-6 max-[720px]:pt-[26px]">
+      <div className="relative z-[1] mx-auto max-w-[760px]">
+        <p className="font-serif text-md font-semibold text-body">Good afternoon, {user.name}!</p>
+        <h1 className="mb-2.5 font-serif text-hero font-bold leading-[1.08] tracking-[-0.01em] text-ink">
+          What are we{" "}
+          <span className="relative px-1.5 font-script text-[1.32em] font-normal leading-[0.9] text-success">
+            Shopping
+            <Swoosh className="pointer-events-none absolute bottom-[-0.02em] left-1 right-1 h-[0.3em] w-[calc(100%-8px)] overflow-visible" />
+          </span>{" "}
+          for today?
+        </h1>
+        <p className="mx-auto max-w-[520px] text-md text-body">
+          Your AI grocery assistant for meal ideas, savings, recipes, and stress-free shopping.
+        </p>
+        <div className="mt-[clamp(18px,3vw,28px)] flex flex-wrap justify-center gap-3.5 max-[720px]:gap-2.5">
+          <a href="#" className={`${cta} bg-success`}>
+            <Newspaper size={16} aria-hidden /> This week&apos;s Sales Ad
+          </a>
+          <a href="#" className={`${cta} bg-brand`}>
+            <Ticket size={16} aria-hidden /> This week&apos;s Coupons
+          </a>
+        </div>
       </div>
     </section>
   );
 }
 
-function PromoImage({ src }: { src: string }) {
+function TileImage({ src }: { src: string }) {
   return (
-    <div className="absolute inset-y-0 right-0 w-[45%]">
-      <Image src={src} alt="" fill sizes="200px" className="object-cover" />
+    <div className="absolute right-0 top-0 h-full w-[46%]">
+      <Image src={src} alt="" fill sizes="(max-width: 900px) 46vw, 200px" className="object-cover" />
     </div>
   );
 }
 
 function AdTag() {
   return (
-    <span className="absolute right-2.5 top-2.5 rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag">
+    <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
       RMN ad placement
     </span>
   );
 }
 
-const card = "relative h-[200px] overflow-hidden rounded-promo shadow-promo";
+const tile = "relative block h-[200px] min-h-[180px] overflow-hidden rounded-promo text-ink shadow-promo";
+const body = "relative z-[2] flex h-full w-[58%] flex-col gap-[5px] p-5";
+const tileTitle = "font-serif text-card-title font-bold leading-[1.1]";
+const tileCta =
+  "mt-auto inline-flex items-center self-start rounded-pill px-[18px] py-[9px] text-ui font-bold shadow-chip";
 
 export function PromoCards() {
   return (
-    <div className="mt-[11px] grid grid-cols-1 gap-[17px] md:grid-cols-2 lg:grid-cols-3">
-      <a href="#" className={`${card} bg-promo-sage`}>
-        <PromoImage src="/live/promo-healthier.png" />
+    <div className="mb-[clamp(28px,5vw,44px)] mt-[clamp(6px,1vw,12px)] grid grid-cols-3 gap-[clamp(12px,1.6vw,20px)] max-[900px]:grid-cols-1">
+      <a href="#" className={`${tile} bg-promo-sage`}>
         <AdTag />
-        <div className="absolute inset-y-5 left-5 flex w-[148px] flex-col items-start justify-between">
-          <h2 className="font-serif text-card-title font-bold leading-[1.1] text-ink">
-            Healthier, Cheaper, Better.
-          </h2>
-          <span className="rounded-pill bg-white px-[18px] py-[9px] text-ui font-bold text-success-deep shadow-chip">
-            Shop Today
-          </span>
+        <div className={body}>
+          <span className={tileTitle}>Healthier, Cheaper, Better.</span>
+          <span className={`${tileCta} bg-white text-success-deep`}>Shop Today</span>
         </div>
+        <TileImage src="/live/promo-healthier.png" />
       </a>
 
-      <a href="#" className={`${card} bg-promo-cream`}>
-        <PromoImage src="/live/promo-local.jpg" />
-        <div className="absolute left-5 top-5 w-[148px]">
-          <span className="block text-label font-bold text-ink">Featured local item</span>
-          <div className="mt-2.5 flex items-center gap-1 text-small text-ink">
+      <a href="#" className={`${tile} bg-promo-cream`}>
+        <div className={body}>
+          <span className="text-label font-bold">Featured local item</span>
+          <span className="mt-[5px] flex items-center gap-1 text-small opacity-85">
             <MapPin size={12} aria-hidden /> From Stewart Farms
-          </div>
-        </div>
-      </a>
-
-      <a href="#" className={`${card} bg-promo-lilac md:col-span-2 lg:col-span-1`}>
-        <PromoImage src="/live/promo-inspiration.png" />
-        <AdTag />
-        <div className="absolute inset-y-5 left-5 flex w-[148px] flex-col items-start">
-          <h2 className="font-serif text-card-title font-bold leading-[1.1] text-ink">
-            Fresh inspiration delivered
-          </h2>
-          <p className="mt-1.5 text-label leading-[1.25] text-ink">
-            Easy recipes and quality ingredients, all in one place
-          </p>
-          <span className="mt-auto rounded-pill bg-violet px-[18px] py-[9px] text-ui font-bold text-white">
-            Learn More
           </span>
         </div>
+        <TileImage src="/live/promo-local.jpg" />
+      </a>
+
+      <a href="#" className={`${tile} bg-promo-lilac`}>
+        <AdTag />
+        <div className={body}>
+          <span className={tileTitle}>Fresh inspiration delivered</span>
+          <span className="text-label opacity-90">Easy recipes and quality ingredients, all in one place</span>
+          <span className={`${tileCta} bg-violet text-white`}>Learn More</span>
+        </div>
+        <TileImage src="/live/promo-inspiration.png" />
       </a>
     </div>
   );

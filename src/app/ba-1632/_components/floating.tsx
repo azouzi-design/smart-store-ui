@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import { useState, useSyncExternalStore } from "react";
 
+// Mirrors the live .pdock-* (For you) and .gp-assist-fab (Ask Breezy) rules.
+
 const rows = [
   { label: "Personalized coupons for you", Icon: Tag },
   { label: "Meals we think you'll love", Icon: Utensils },
@@ -34,14 +36,13 @@ export function ForYou() {
   const isWide = useSyncExternalStore(subscribeWide, () => window.matchMedia(wide).matches, () => false);
   const [choice, setChoice] = useState<boolean | null>(null);
   const open = choice ?? isWide;
-  const setOpen = setChoice;
 
   if (!open) {
     return (
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => setChoice(true)}
         aria-expanded={false}
-        className="fixed right-0 top-[138px] z-50 rounded-l-[10px] bg-brand px-[7px] py-4 text-copy font-bold text-white shadow-tab [writing-mode:vertical-rl]"
+        className="fixed right-0 top-[clamp(110px,16vh,190px)] z-[2540] rounded-l-[10px] bg-brand px-[7px] py-4 text-copy font-bold tracking-[0.03em] text-white shadow-tab [writing-mode:vertical-rl] hover:brightness-[1.08] max-[640px]:top-[clamp(84px,14vh,150px)] max-[640px]:px-1.5 max-[640px]:py-3.5 max-[640px]:text-label"
       >
         For you
       </button>
@@ -51,24 +52,25 @@ export function ForYou() {
   return (
     <aside
       aria-label="For you"
-      className="fixed right-3 top-[120px] z-50 w-[430px] max-w-[calc(100vw-24px)] overflow-hidden rounded-panel border border-line bg-surface shadow-panel"
+      className="fixed right-3 top-[clamp(96px,14vh,170px)] z-[2560] flex max-h-[calc(100vh-clamp(96px,14vh,170px)-16px)] w-[min(430px,calc(100vw-24px))] flex-col overflow-hidden rounded-panel border border-line bg-surface text-ink shadow-panel max-[640px]:inset-y-0 max-[640px]:right-0 max-[640px]:max-h-none max-[640px]:w-screen max-[640px]:rounded-none max-[640px]:border-l-0"
     >
-      <div className="flex items-center justify-between border-b border-brand/10 bg-tint px-3.5 py-3">
+      <div className="flex flex-none items-center justify-between gap-2.5 rounded-t-[13px] border-b border-brand/12 bg-tint px-3.5 py-3">
         <h2 className="text-panel font-extrabold text-brand">For you</h2>
         <button
-          onClick={() => setOpen(false)}
+          onClick={() => setChoice(false)}
           aria-label="Close For you panel"
-          className="grid size-10 place-items-center text-ink"
+          className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-lg px-2 py-1.5 text-muted hover:bg-soft hover:text-ink"
         >
           <X size={18} aria-hidden />
         </button>
       </div>
-      <ul>
+      <ul className="flex-[0_1_auto] overflow-y-auto">
         {rows.map(({ label, Icon }) => (
-          <li key={label} className="border-b border-line-faint last:border-0">
-            <button className="flex w-full items-center gap-2.5 px-4 py-[13px] text-lead font-semibold text-ink">
-              <Icon size={16} aria-hidden /> {label}
-              <ChevronDown size={14} className="ml-auto text-muted" aria-hidden />
+          <li key={label} className="border-line/55 [&+&]:border-t">
+            <button className="flex w-full items-center gap-2.5 px-4 py-[13px] text-left text-lead font-semibold text-ink">
+              <Icon size={15} aria-hidden />
+              <span className="flex-1">{label}</span>
+              <ChevronDown size={12} className="flex-none text-muted" aria-hidden />
             </button>
           </li>
         ))}
@@ -79,11 +81,11 @@ export function ForYou() {
 
 export function BreezyFab() {
   return (
-    <button className="fixed bottom-7 left-7 z-40 flex items-center gap-2.5 rounded-pill bg-brand py-2.5 pl-2.5 pr-[22px] text-lead font-bold text-white shadow-fab">
-      <span aria-hidden className="grid size-[38px] place-items-center rounded-full bg-white">
-        <Image src="/live/breezy-avatar.png" alt="" width={22} height={22} className="rounded-full" />
+    <button className="fixed bottom-[clamp(14px,4vw,28px)] left-[clamp(14px,4vw,28px)] z-40 inline-flex items-center gap-2.5 rounded-pill bg-brand py-2.5 pl-2.5 pr-[22px] font-bold text-white shadow-fab max-[640px]:hidden">
+      <span aria-hidden className="inline-flex size-[38px] flex-none items-center justify-center rounded-full bg-white">
+        <Image src="/live/breezy-avatar.png" alt="" width={22} height={22} className="rounded-full object-cover" />
       </span>
-      Ask Breezy
+      <span className="text-[15.5px]">Ask Breezy</span>
     </button>
   );
 }
