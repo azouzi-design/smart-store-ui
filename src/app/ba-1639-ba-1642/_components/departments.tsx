@@ -22,7 +22,7 @@ import { departments, products, totalItems, type Product } from "../_data";
  * PROPOSED (BA-1642, direction D "Side rail"): on desktop the departments are
  * a sticky list beside the products, so none hide behind a scroll arrow (the
  * live strip's arrow covers "Shop All Categories"). Below 1024px the list
- * becomes a scrolling chip row. Icons are Hugeicons (free set).
+ * becomes chips that wrap onto new lines. Icons are Hugeicons (free set).
  * Product cards, results line, Filter and Sort are inherited from the live page.
  */
 
@@ -119,7 +119,7 @@ export function Departments() {
           <div
             role="tablist"
             aria-orientation="vertical"
-            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] lg:flex-col lg:gap-0.5 lg:overflow-visible [&::-webkit-scrollbar]:hidden"
+            className="flex flex-wrap gap-2 pb-1 lg:flex-col lg:flex-nowrap lg:gap-0.5"
           >
             {departments.map((d) => {
               const on = d === active;
