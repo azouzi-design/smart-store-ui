@@ -31,7 +31,10 @@ export default function Page() {
         </div>
         {/* flex-col: live sections sit in grid cells, so their margins add up instead of collapsing */}
         <main className="relative mx-auto flex w-full max-w-site flex-col px-[clamp(14px,4vw,32px)]">
-          <Hero />
+          {/* .home-hero: the For you panel stretches this band to fit itself (see floating.tsx) */}
+          <div className="home-hero">
+            <Hero />
+          </div>
           <PromoCards />
           <Departments />
         </main>
