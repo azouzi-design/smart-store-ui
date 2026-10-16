@@ -124,7 +124,7 @@ export function Departments() {
   const [active, setActive] = useState(departments[0]);
   return (
     <section className="mt-[clamp(10px,2vw,22px)]">
-      <h2 className="mb-[18px] font-serif text-h2 font-bold tracking-[-0.01em] text-brand">Departments</h2>
+      <h2 className="mb-[18px] font-serif text-h2 font-bold tracking-[-0.01em] text-ink">Departments</h2>
 
       <div
         role="tablist"

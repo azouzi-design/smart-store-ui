@@ -99,3 +99,10 @@
     to { transform: scaleX(1); }
   }
 }
+
+/* PROPOSED — BA-1638 in-store only deals */
+@theme {
+  /* Weekly-ad price: big dollars, superscript cents */
+  --text-ad-price: clamp(22px, 2.2vw, 28px);
+  --text-ad-price-lg: clamp(40px, 4.6vw, 56px);
+}

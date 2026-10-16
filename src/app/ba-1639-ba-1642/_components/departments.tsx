@@ -112,7 +112,7 @@ export function Departments() {
   const [active, setActive] = useState(departments[0]);
   return (
     <section className="mt-[clamp(10px,2vw,22px)]">
-      <h2 className="mb-5 font-serif text-h2 font-bold tracking-tight text-brand">Departments</h2>
+      <h2 className="mb-5 font-serif text-h2 font-bold tracking-tight text-ink">Departments</h2>
 
       <div className="lg:grid lg:grid-cols-[14rem_1fr] lg:gap-8">
         <nav aria-label="Departments" className="lg:sticky lg:top-24 lg:self-start">

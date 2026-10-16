@@ -1,21 +1,37 @@
-import { ArrowUpDown, ChevronDown, Funnel } from "lucide-react";
+"use client";
+
+import { AiMagicIcon, CarrotIcon, DashboardSquare01Icon, ShoppingBasket01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { ArrowUpDown, Funnel } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { departments, products, results, sortOptions, type Product } from "../_data";
 
-// Mirrors the live .sec.shop / .shop-controls / .dtab / .grid / .ipc-* rules.
-
 /*
- * Live grid is `repeat(auto-fill, minmax(210px, 1fr))` (2 columns ≤480px).
- * With its gutters that resolves to 2 / 3 / 4 / 5 columns at these widths.
+ * PROPOSED (BA-1638): same departments pattern as BA-1639 + BA-1642. On desktop
+ * the departments are a sticky list beside the products, so none hide behind
+ * the live tab strip's scroll fade. Below 1024px the list becomes chips that
+ * wrap onto new lines. Icons are Hugeicons (free set). Product cards, results
+ * line, Filter and Sort are inherited from the live page.
  */
-const grid =
-  "grid grid-cols-2 gap-2.5 min-[481px]:gap-[clamp(12px,2vw,18px)] min-[716px]:grid-cols-3 min-[958px]:grid-cols-4 min-[1186px]:grid-cols-5";
+
+const icons: Record<string, IconSvgElement> = {
+  "Recommended For You": AiMagicIcon,
+  Grocery: ShoppingBasket01Icon,
+  Produce: CarrotIcon,
+};
+
+const focusRing = "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
+
+/** Shifts the mock products per department so switching visibly changes the grid. */
+function shownProducts(active: string) {
+  const start = (departments.indexOf(active) * 7) % products.length;
+  return [...products.slice(start), ...products.slice(0, start)];
+}
 
 function ProductCard({ p }: { p: Product }) {
   return (
-    <article
-      className={`relative flex flex-col gap-2.5 rounded-card border border-line bg-surface p-3 shadow-card transition-[box-shadow,transform,border-color] duration-[180ms] hover:-translate-y-0.5 hover:border-brand/45 hover:shadow-[0_10px_26px_rgba(15,30,40,0.1)] max-[480px]:p-2.5`}
-    >
+    <article className="relative flex flex-col gap-2.5 rounded-card border border-line bg-surface p-3 shadow-card transition-[box-shadow,transform,border-color] duration-[180ms] hover:-translate-y-0.5 hover:border-brand/45 hover:shadow-[0_10px_26px_rgba(15,30,40,0.1)] max-[480px]:p-2.5">
       {/* pb-1: live image is inline, leaving a 4px descender gap below it */}
       <div className="relative pb-1">
         <div className="relative aspect-square w-full">
@@ -43,63 +59,77 @@ function ProductCard({ p }: { p: Product }) {
   );
 }
 
-export function ThisWeeksDeals() {
+function ResultsControls() {
   return (
-    <section className="mt-[clamp(10px,2vw,22px)]">
-      <h2 className="mb-[18px] font-serif text-h2 font-bold tracking-[-0.01em] text-brand">This Week&apos;s Deals</h2>
+    <div className="mb-5 flex flex-wrap items-center justify-end gap-3 border-b border-line pb-3">
+      <span className="whitespace-nowrap text-copy text-muted">
+        {results.total} results · {results.onSale} on sale
+      </span>
+      <button className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface px-3.5 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] hover:border-brand">
+        <Funnel size={15} aria-hidden /> Filter
+      </button>
+      <label className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface pl-3.5 pr-2 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] focus-within:border-brand">
+        <ArrowUpDown size={15} aria-hidden />
+        <select aria-label="Sort" className="cursor-pointer border-0 bg-transparent p-0 text-ui font-semibold text-ink outline-none">
+          {sortOptions.map((o) => (
+            <option key={o}>{o}</option>
+          ))}
+        </select>
+      </label>
+    </div>
+  );
+}
 
-      <div className="mb-5 mt-1 flex flex-wrap items-end justify-between gap-x-4 gap-y-2 border-b border-line">
-        <div className="flex min-w-0 flex-[1_1_100%] items-start gap-4 max-[640px]:gap-2.5">
-          <div className="relative -mx-[30px] min-w-0 flex-1 px-[30px] max-[640px]:mx-0 max-[640px]:px-0">
-            <div
-              role="tablist"
-              className="flex gap-1 overflow-x-auto pb-1.5 pt-0.5 [mask-image:linear-gradient(to_right,#000_calc(100%-28px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {departments.map((d, i) => (
+export function ThisWeeksDeals() {
+  const [active, setActive] = useState(departments[0]);
+  return (
+    <section id="this-weeks-deals" className="mt-[clamp(10px,2vw,22px)] scroll-mt-24">
+      <h2 className="mb-5 font-serif text-h2 font-bold tracking-tight text-ink">This Week&apos;s Deals</h2>
+
+      <div className="lg:grid lg:grid-cols-[14rem_1fr] lg:gap-8">
+        <nav aria-label="Departments" className="lg:sticky lg:top-24 lg:self-start">
+          <div
+            role="tablist"
+            aria-orientation="vertical"
+            className="flex flex-wrap gap-2 pb-1 lg:flex-col lg:flex-nowrap lg:gap-0.5"
+          >
+            {departments.map((d) => {
+              const on = d === active;
+              return (
                 <button
                   key={d}
                   role="tab"
-                  aria-selected={i === 0}
-                  className={`mr-5 inline-flex flex-none items-center justify-center whitespace-nowrap border-b-2 px-1 pb-[9px] pt-2.5 text-copy font-medium tracking-[0.01em] max-[640px]:min-w-[70px] max-[640px]:px-2.5 max-[640px]:pb-[7px] max-[640px]:pt-2 max-[640px]:text-[11.5px] ${
-                    i === 0 ? "border-brand text-brand" : "border-transparent text-muted hover:text-ink"
+                  aria-selected={on}
+                  onClick={() => setActive(d)}
+                  className={`relative inline-flex h-11 flex-none items-center gap-3 rounded-md px-3 text-left text-ui transition-colors max-lg:rounded-pill max-lg:border lg:w-full ${focusRing} ${
+                    on
+                      ? "bg-tint font-semibold text-brand max-lg:border-brand lg:before:absolute lg:before:inset-y-2 lg:before:left-0 lg:before:w-1 lg:before:rounded-pill lg:before:bg-brand"
+                      : "font-medium text-ink hover:bg-tint/60 hover:text-brand max-lg:border-line max-lg:bg-surface"
                   }`}
                 >
-                  <span className="leading-[1.1]">{d}</span>
+                  <HugeiconsIcon icon={icons[d]} size={18} strokeWidth={1.6} aria-hidden className={on ? "" : "text-muted"} />
+                  {d}
                 </button>
-              ))}
-            </div>
+              );
+            })}
+            <a
+              href="#"
+              className={`inline-flex h-11 flex-none items-center gap-3 px-3 text-ui font-semibold text-brand-link hover:underline lg:mt-2 lg:border-t lg:border-line lg:pt-1 ${focusRing}`}
+            >
+              <HugeiconsIcon icon={DashboardSquare01Icon} size={18} strokeWidth={1.6} aria-hidden /> All categories
+            </a>
           </div>
-          <div className="relative flex-none pt-2.5">
-            <button className="inline-flex items-center gap-1 whitespace-nowrap py-1 text-label font-medium text-ink hover:text-brand">
-              Shop All Categories <ChevronDown size={12} aria-hidden />
-            </button>
+        </nav>
+
+        <div className="min-w-0 max-lg:mt-5">
+          <ResultsControls />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+            {shownProducts(active).map((p) => (
+              <ProductCard key={p.name} p={p} />
+            ))}
           </div>
         </div>
-
-        <div className="ml-auto flex items-center gap-3 pb-2">
-          <span className="whitespace-nowrap text-copy text-muted">
-            {results.total} results · {results.onSale} on sale
-          </span>
-          <button className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface px-3.5 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] hover:border-brand">
-            <Funnel size={15} aria-hidden /> Filter
-          </button>
-          <label className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface pl-3.5 pr-2 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] focus-within:border-brand">
-            <ArrowUpDown size={15} aria-hidden />
-            <select aria-label="Sort" className="cursor-pointer border-0 bg-transparent p-0 text-ui font-semibold text-ink outline-none">
-              {sortOptions.map((o) => (
-                <option key={o}>{o}</option>
-              ))}
-            </select>
-          </label>
-        </div>
       </div>
-
-      <div className={grid}>
-        {products.map((p) => (
-          <ProductCard key={p.name} p={p} />
-        ))}
-      </div>
-
     </section>
   );
 }

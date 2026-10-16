@@ -15,22 +15,32 @@ export const departments = ["Recommended For You", "Grocery", "Produce"];
 
 export const sortOptions = ["Featured", "Biggest savings", "Price: low to high", "Price: high to low", "Name"];
 
-export type InStoreDeal = { name: string; price: string; dept?: string; img: string };
+/**
+ * `dept` is what the live page shows (inconsistent: "FOOD", "Miscellaneous" or missing).
+ * `category` is PROPOSED: one normalized label per deal, used by the proposed layouts.
+ */
+export type InStoreDeal = { name: string; price: string; dept?: string; category: InStoreCategory; img: string };
+
+export const inStoreCategories = ["Meat", "Produce", "Deli", "Snacks"] as const;
+export type InStoreCategory = (typeof inStoreCategories)[number];
+
+/** PROPOSED: mock ad week shown on the in-store variants (the live page doesn't say). */
+export const adWeek = { from: "Wed, Oct 14", to: "Tue, Oct 20" };
 
 // Images in /public/live are copied from the live site's CDN (see public/live/README.md).
 export const inStoreDeals: InStoreDeal[] = [
-  { name: "Tortilla Chips", price: "$3.99", img: "/live/ad/tortilla-chips.jpg" },
-  { name: "Quarter Loin chops", price: "$2.99", dept: "Miscellaneous", img: "/live/ad/quarter-loin-chops.jpg" },
-  { name: "Sunion Tearless Sweet", price: "$1.29", dept: "Produce", img: "/live/plu/4166.jpg" },
-  { name: "Sliced White Mushrooms", price: "$1.99", img: "/live/ad/sliced-white-mushrooms.jpg" },
-  { name: "Bartlett Pears", price: "$1.49", dept: "FOOD", img: "/live/plu/4409.jpg" },
-  { name: "Turkey Bacon Swiss Ciabatta Sandwich", price: "$9.99", img: "/live/ad/turkey-bacon-swiss-ciabatta-sandwich.jpg" },
-  { name: "Boneless New York Strip Steak", price: "$14.99", img: "/live/ad/boneless-new-york-strip-steak.jpg" },
-  { name: "Boneless Beef Bottom Round Roast", price: "$6.99", img: "/live/ad/boneless-beef-bottom-round-roast.jpg" },
-  { name: "Bottom Round Steaks", price: "$7.29", img: "/live/ad/bottom-round-steaks.jpg" },
-  { name: "Chicken Drumsticks or Thighs", price: "$1.29", img: "/live/ad/chicken-drumsticks-or-thighs.jpg" },
-  { name: "Stuffed Peppers Ground Beef", price: "$6.99", img: "/live/ad/stuffed-peppers-ground-beef.jpg" },
-  { name: "Pork Spare Ribs", price: "$3.59", img: "/live/ad/pork-spare-ribs.jpg" },
+  { name: "Tortilla Chips", price: "$3.99", category: "Snacks", img: "/live/ad/tortilla-chips.jpg" },
+  { name: "Quarter Loin chops", price: "$2.99", dept: "Miscellaneous", category: "Meat", img: "/live/ad/quarter-loin-chops.jpg" },
+  { name: "Sunion Tearless Sweet", price: "$1.29", dept: "Produce", category: "Produce", img: "/live/plu/4166.jpg" },
+  { name: "Sliced White Mushrooms", price: "$1.99", category: "Produce", img: "/live/ad/sliced-white-mushrooms.jpg" },
+  { name: "Bartlett Pears", price: "$1.49", dept: "FOOD", category: "Produce", img: "/live/plu/4409.jpg" },
+  { name: "Turkey Bacon Swiss Ciabatta Sandwich", price: "$9.99", category: "Deli", img: "/live/ad/turkey-bacon-swiss-ciabatta-sandwich.jpg" },
+  { name: "Boneless New York Strip Steak", price: "$14.99", category: "Meat", img: "/live/ad/boneless-new-york-strip-steak.jpg" },
+  { name: "Boneless Beef Bottom Round Roast", price: "$6.99", category: "Meat", img: "/live/ad/boneless-beef-bottom-round-roast.jpg" },
+  { name: "Bottom Round Steaks", price: "$7.29", category: "Meat", img: "/live/ad/bottom-round-steaks.jpg" },
+  { name: "Chicken Drumsticks or Thighs", price: "$1.29", category: "Meat", img: "/live/ad/chicken-drumsticks-or-thighs.jpg" },
+  { name: "Stuffed Peppers Ground Beef", price: "$6.99", category: "Deli", img: "/live/ad/stuffed-peppers-ground-beef.jpg" },
+  { name: "Pork Spare Ribs", price: "$3.59", category: "Meat", img: "/live/ad/pork-spare-ribs.jpg" },
 ];
 
 export type Product = { name: string; price: string; was: string; unit?: string; img: string };

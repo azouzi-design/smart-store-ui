@@ -54,7 +54,7 @@ function ProductCard({ p, className }: { p: Product; className: string }) {
 export function Departments() {
   return (
     <section className="mt-[clamp(10px,2vw,22px)]">
-      <h2 className="mb-[18px] font-serif text-h2 font-bold tracking-[-0.01em] text-brand">Departments</h2>
+      <h2 className="mb-[18px] font-serif text-h2 font-bold tracking-[-0.01em] text-ink">Departments</h2>
 
       <div className="mb-5 mt-1 flex flex-wrap items-end justify-between gap-x-4 gap-y-2 border-b border-line">
         <div className="flex min-w-0 flex-[1_1_100%] items-start gap-4 max-[640px]:gap-2.5">

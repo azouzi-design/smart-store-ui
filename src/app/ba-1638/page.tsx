@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * Faithful (inherited) rebuild of the live Weekly Ad page — the "before" baseline.
+ * Rebuild of the live Weekly Ad page. Header, footer and coupons are inherited.
+ * PROPOSED: the weekly-ad-grid "In-store only deals" and the BA-1639 + BA-1642
+ * side-rail "This Week's Deals". The other in-store directions live on /ba-1638-ideation.
  * Images come from the live site (public/live); all data is mock (see ./_data.ts).
  */
 export default function Page() {
@@ -22,7 +24,9 @@ export default function Page() {
 
       <main className="mx-auto w-full max-w-site px-[clamp(14px,4vw,32px)] pt-[clamp(24px,4vw,44px)]">
         <InStoreDeals />
-        <ThisWeeksDeals />
+        <div className="mt-14 border-t border-line pt-2">
+          <ThisWeeksDeals />
+        </div>
         <CouponsOnCard />
       </main>
 

@@ -98,7 +98,7 @@ export function ForYou() {
       className="fixed right-3 top-[clamp(96px,14vh,170px)] z-[2560] flex max-h-[calc(100vh-clamp(96px,14vh,170px)-16px)] w-[min(430px,calc(100vw-24px))] flex-col overflow-hidden rounded-panel border border-line bg-surface text-ink shadow-panel max-[640px]:inset-y-0 max-[640px]:right-0 max-[640px]:max-h-none max-[640px]:w-screen max-[640px]:rounded-none max-[640px]:border-l-0"
     >
       <div data-dock-head className="flex flex-none items-center justify-between gap-2.5 rounded-t-[13px] border-b border-brand/12 bg-tint px-3.5 py-3">
-        <h2 className="text-panel font-extrabold text-brand">For you</h2>
+        <h2 className="text-panel font-extrabold text-ink">For you</h2>
         <button
           onClick={() => setChoice(false)}
           aria-label="Close For you panel"
