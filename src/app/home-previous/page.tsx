@@ -7,7 +7,7 @@ import { InfoBar, SiteHeader } from "./_components/header";
 import { Hero, PromoCards } from "./_components/hero";
 
 export const metadata: Metadata = {
-  title: "BA-1632 — Homepage rebuild",
+  title: "Home (previous) — Homepage rebuild",
 };
 
 /**

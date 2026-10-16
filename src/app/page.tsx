@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const pages = [
   { title: "Style guide", href: "/style-guide" },
-  { title: "BA-1632", href: "/ba-1632" },
+  { title: "home-previous", href: "/home-previous" },
   { title: "BA-1638", href: "/ba-1638" },
   { title: "BA-1639", href: "/ba-1639" },
   { title: "BA-1641", href: "/ba-1641" },
