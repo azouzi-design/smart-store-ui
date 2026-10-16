@@ -38,6 +38,14 @@ export function ForYou() {
   const open = choice ?? isWide;
   const panelRef = useRef<HTMLElement>(null);
 
+  // PROPOSED: lets the hero lay itself out around the docked panel (`docked:` variant).
+  useEffect(() => {
+    document.documentElement.dataset.dock = open ? "open" : "closed";
+    return () => {
+      delete document.documentElement.dataset.dock;
+    };
+  }, [open]);
+
   // Ported from the live PersonalizationDock: while open, the panel sits 8px below the
   // top of .home-hero and the hero band grows to fit it, pushing the promo tiles down.
   useEffect(() => {

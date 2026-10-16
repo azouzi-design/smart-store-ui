@@ -14,6 +14,19 @@ body {
   overflow-x: clip;
 }
 
+/*
+ * PROPOSED (BA-1641): wide screens while the "For you" panel is docked open.
+ * The panel writes html[data-dock]; with no attribute yet (first paint) it is
+ * open by default on wide screens, so this matches before hydration too.
+ */
+@custom-variant docked {
+  @media (min-width: 1024px) {
+    html:not([data-dock="closed"]) & {
+      @slot;
+    }
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 2px;

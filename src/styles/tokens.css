@@ -88,3 +88,14 @@
   /* Layout: --maxw on the live site */
   --container-site: 1200px;
 }
+
+/* PROPOSED — BA-1641 hero ad carousel */
+@theme {
+  /* Autoplay timer: the active dot fills, then the carousel advances */
+  --animate-carousel-progress: carousel-progress 6s linear forwards;
+
+  @keyframes carousel-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
