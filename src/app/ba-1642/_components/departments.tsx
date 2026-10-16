@@ -1,8 +1,54 @@
-import { ArrowRight, ArrowUpDown, ChevronDown, Funnel } from "lucide-react";
+"use client";
+
+import {
+  AiMagicIcon,
+  ArrowDown01Icon,
+  BeerIcon,
+  CarrotIcon,
+  CroissantIcon,
+  DashboardSquare01Icon,
+  DetergentIcon,
+  MilkCartonIcon,
+  SandwichIcon,
+  ShoppingBasket01Icon,
+  SteakIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { ArrowRight, ArrowUpDown, Funnel } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { departments, previewCount, products, totalItems, type Product } from "../_data";
 
-// Mirrors the live .sec.shop / .shop-controls / .dtab / .grid / .ipc-* rules.
+// Grid, cards and controls mirror the live .sec.shop / .shop-controls / .grid / .ipc-* rules.
+
+/*
+ * PROPOSED (BA-1642, direction A "Pill chips"): the live underline tabs scroll
+ * behind an arrow that covers "Shop All Categories". Chips wrap on desktop so
+ * every department is visible, scroll sideways on phones, and "All categories"
+ * is the last chip. Icons are Hugeicons (free set).
+ */
+
+const icons: Record<string, IconSvgElement> = {
+  "Recommended For You": AiMagicIcon,
+  Bakery: CroissantIcon,
+  "Beer & Wine": BeerIcon,
+  Dairy: MilkCartonIcon,
+  Deli: SandwichIcon,
+  Grocery: ShoppingBasket01Icon,
+  Household: DetergentIcon,
+  "Meat & Poultry": SteakIcon,
+  Produce: CarrotIcon,
+};
+
+/* 36px pill; the ::after extends the hit area to 44px without changing the look. */
+const chip =
+  "relative inline-flex h-9 flex-none items-center gap-1.5 rounded-pill border px-3.5 text-label font-semibold transition-colors outline-none after:absolute after:inset-x-0 after:-inset-y-1 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
+
+/** Shifts the mock products per department so switching visibly changes the grid. */
+function shownProducts(active: string) {
+  const start = (departments.indexOf(active) * 3) % products.length;
+  return [...products.slice(start), ...products.slice(0, start)].slice(0, previewCount);
+}
 
 /*
  * Live grid is `repeat(auto-fill, minmax(210px, 1fr))` (2 columns ≤480px).
@@ -51,66 +97,66 @@ function ProductCard({ p, className }: { p: Product; className: string }) {
   );
 }
 
+/** Results line + Filter + Sort (inherited). */
+function ResultsControls({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex items-center gap-3 ${className}`}>
+      <span className="whitespace-nowrap text-copy text-muted">
+        {totalItems} results · {totalItems} on sale
+      </span>
+      <button className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface px-3.5 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] hover:border-brand">
+        <Funnel size={15} aria-hidden /> Filter
+      </button>
+      <label className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface pl-3.5 pr-2 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] focus-within:border-brand">
+        <ArrowUpDown size={15} aria-hidden />
+        <select aria-label="Sort" className="cursor-pointer border-0 bg-transparent p-0 text-ui font-semibold text-ink outline-none">
+          <option>Featured</option>
+          <option>Price: low to high</option>
+          <option>Price: high to low</option>
+          <option>Biggest savings</option>
+        </select>
+      </label>
+    </div>
+  );
+}
+
 export function Departments() {
+  const [active, setActive] = useState(departments[0]);
   return (
     <section className="mt-[clamp(10px,2vw,22px)]">
       <h2 className="mb-[18px] font-serif text-h2 font-bold tracking-[-0.01em] text-brand">Departments</h2>
 
-      <div className="mb-5 mt-1 flex flex-wrap items-end justify-between gap-x-4 gap-y-2 border-b border-line">
-        <div className="flex min-w-0 flex-[1_1_100%] items-start gap-4 max-[640px]:gap-2.5">
-          <div className="relative -mx-[30px] min-w-0 flex-1 px-[30px] max-[640px]:mx-0 max-[640px]:px-0">
-            <div
-              role="tablist"
-              className="flex gap-1 overflow-x-auto pb-1.5 pt-0.5 [mask-image:linear-gradient(to_right,#000_calc(100%-28px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {departments.map((d, i) => (
-                <button
-                  key={d}
-                  role="tab"
-                  aria-selected={i === 0}
-                  className={`mr-5 inline-flex flex-none items-center justify-center whitespace-nowrap border-b-2 px-1 pb-[9px] pt-2.5 text-copy font-medium tracking-[0.01em] max-[640px]:min-w-[70px] max-[640px]:px-2.5 max-[640px]:pb-[7px] max-[640px]:pt-2 max-[640px]:text-[11.5px] ${
-                    i === 0 ? "border-brand text-brand" : "border-transparent text-muted hover:text-ink"
-                  }`}
-                >
-                  <span className="leading-[1.1]">{d}</span>
-                </button>
-              ))}
-            </div>
+      <div
+        role="tablist"
+        aria-label="Departments"
+        className="flex gap-2 overflow-x-auto py-1 [scrollbar-width:none] md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden"
+      >
+        {departments.map((d) => {
+          const on = d === active;
+          return (
             <button
-              aria-label="Scroll departments"
-              className="absolute right-0 top-[46%] z-[2] flex size-[26px] -translate-y-1/2 items-center justify-center rounded-full border border-line bg-surface text-[17px] leading-none text-ink hover:border-brand hover:text-brand max-[640px]:hidden"
+              key={d}
+              role="tab"
+              aria-selected={on}
+              onClick={() => setActive(d)}
+              className={`${chip} ${on ? "border-brand bg-brand text-surface" : "border-line bg-surface text-ink hover:border-brand hover:text-brand"}`}
             >
-              ›
+              <HugeiconsIcon icon={icons[d]} size={15} strokeWidth={1.8} aria-hidden />
+              {d}
             </button>
-          </div>
-          <div className="relative flex-none pt-2.5">
-            <button className="inline-flex items-center gap-1 whitespace-nowrap py-1 text-label font-medium text-ink hover:text-brand">
-              Shop All Categories <ChevronDown size={12} aria-hidden />
-            </button>
-          </div>
-        </div>
-
-        <div className="ml-auto flex items-center gap-3 pb-2">
-          <span className="whitespace-nowrap text-copy text-muted">
-            {totalItems} results · {totalItems} on sale
-          </span>
-          <button className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface px-3.5 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] hover:border-brand">
-            <Funnel size={15} aria-hidden /> Filter
-          </button>
-          <label className="inline-flex h-10 items-center gap-[7px] whitespace-nowrap rounded-card border border-line bg-surface pl-3.5 pr-2 text-ui font-semibold text-ink shadow-[0_2px_1.5px_rgba(0,0,0,0.05)] focus-within:border-brand">
-            <ArrowUpDown size={15} aria-hidden />
-            <select aria-label="Sort" className="cursor-pointer border-0 bg-transparent p-0 text-ui font-semibold text-ink outline-none">
-              <option>Featured</option>
-              <option>Price: low to high</option>
-              <option>Price: high to low</option>
-              <option>Biggest savings</option>
-            </select>
-          </label>
-        </div>
+          );
+        })}
+        <button className={`${chip} border-dashed border-muted bg-surface text-ink hover:border-brand hover:text-brand`}>
+          <HugeiconsIcon icon={DashboardSquare01Icon} size={15} strokeWidth={1.8} aria-hidden />
+          All categories
+          <HugeiconsIcon icon={ArrowDown01Icon} size={13} strokeWidth={2} aria-hidden />
+        </button>
       </div>
 
+      <ResultsControls className="mb-5 mt-5 flex-wrap justify-end border-b border-line pb-3" />
+
       <div className={grid}>
-        {products.slice(0, previewCount).map((p, i) => (
+        {shownProducts(active).map((p, i) => (
           <ProductCard key={p.name} p={p} className={rowVisibility(i)} />
         ))}
       </div>

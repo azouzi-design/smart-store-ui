@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Faithful (inherited) rebuild of the live homepage — the "before" baseline.
+ * Live homepage rebuild with the PROPOSED pill-chip department list (BA-1642).
  * Layout and type follow the live stylesheet; images come from the live site
  * (public/live); all data is mock (see ./_data.ts).
  */
