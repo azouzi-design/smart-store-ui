@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Departments } from "./_components/departments";
 import { SiteFooter, TrustStrip } from "./_components/footer";
 import { BreezyFab, ForYou } from "./_components/floating";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 
 /**
  * Faithful (inherited) rebuild of the live homepage — the "before" baseline.
- * Images/logo are placeholders; all data is mock (see ./_data.ts).
+ * Images come from the live site (public/live); all data is mock (see ./_data.ts).
  */
 export default function Page() {
   return (
@@ -20,11 +21,13 @@ export default function Page() {
       <InfoBar />
 
       <div className="relative">
-        {/* Live uses a photo at 15% opacity fading to white; placeholder gradient here. */}
+        {/* Store photo at 15% opacity, fading to white — as on the live page */}
         <div
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[685px] bg-linear-to-br from-brand via-accent to-success opacity-15 [mask-image:linear-gradient(to_bottom,black_60%,transparent)]"
-        />
+          className="absolute inset-x-0 top-0 h-[685px] opacity-15 [mask-image:linear-gradient(to_bottom,black_60%,transparent)]"
+        >
+          <Image src="/live/hero-bg.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
+        </div>
         <main className="relative mx-auto max-w-site px-8">
           <Hero />
           <PromoCards />

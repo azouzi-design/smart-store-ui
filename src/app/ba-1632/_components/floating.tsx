@@ -2,7 +2,6 @@
 
 import {
   ChevronDown,
-  MessageCircle,
   Receipt,
   Repeat,
   Sparkles,
@@ -11,6 +10,7 @@ import {
   Utensils,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useState, useSyncExternalStore } from "react";
 
 const rows = [
@@ -80,8 +80,8 @@ export function ForYou() {
 export function BreezyFab() {
   return (
     <button className="fixed bottom-7 left-7 z-40 flex items-center gap-2.5 rounded-pill bg-brand py-2.5 pl-2.5 pr-[22px] text-lead font-bold text-white shadow-fab">
-      <span aria-hidden className="grid size-[38px] place-items-center rounded-full bg-white text-brand">
-        <MessageCircle size={20} />
+      <span aria-hidden className="grid size-[38px] place-items-center rounded-full bg-white">
+        <Image src="/live/breezy-avatar.png" alt="" width={22} height={22} className="rounded-full" />
       </span>
       Ask Breezy
     </button>

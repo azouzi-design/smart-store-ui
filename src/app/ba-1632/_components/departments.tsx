@@ -1,15 +1,11 @@
-import { ArrowRight, ArrowUpDown, ChevronDown, ChevronRight, Funnel, ImageIcon, Plus } from "lucide-react";
+import { ArrowRight, ArrowUpDown, ChevronDown, ChevronRight, Funnel, Plus } from "lucide-react";
+import Image from "next/image";
 import { departments, products, type Product } from "../_data";
 
-/** Placeholder for product photography (live images are hosted on their servers). */
-function ProductImage({ name }: { name: string }) {
+function ProductImage({ name, src }: { name: string; src: string }) {
   return (
-    <div
-      role="img"
-      aria-label={name}
-      className="relative mx-auto grid size-[212px] shrink-0 place-items-center rounded-xs bg-soft text-line"
-    >
-      <ImageIcon size={40} aria-hidden />
+    <div className="relative mx-auto size-[212px] shrink-0">
+      <Image src={src} alt={name} fill sizes="212px" className="object-contain" />
       <button
         aria-label={`Add ${name}`}
         className="absolute right-2 top-2 grid size-10 place-items-center rounded-full bg-brand text-white shadow-add"
@@ -26,7 +22,7 @@ function ProductImage({ name }: { name: string }) {
 function ProductCard({ p }: { p: Product }) {
   return (
     <article className="flex min-h-[340px] flex-col rounded-card border border-line bg-surface p-3 shadow-card">
-      <ProductImage name={p.name} />
+      <ProductImage name={p.name} src={p.img} />
       <div className="mt-5 flex flex-1 flex-col border-t border-line/60 pt-2.5">
         <div className="flex items-baseline gap-1.5">
           <span className="text-lead font-extrabold text-success">{p.price}</span>

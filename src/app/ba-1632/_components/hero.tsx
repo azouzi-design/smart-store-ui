@@ -1,4 +1,5 @@
-import { ImageIcon, MapPin, Newspaper, Ticket } from "lucide-react";
+import { MapPin, Newspaper, Ticket } from "lucide-react";
+import Image from "next/image";
 import { user } from "../_data";
 
 export function Hero() {
@@ -31,14 +32,10 @@ export function Hero() {
   );
 }
 
-/** Placeholder for promo photography (live images are hosted on their servers). */
-function PromoImage() {
+function PromoImage({ src }: { src: string }) {
   return (
-    <div
-      aria-hidden
-      className="absolute inset-y-0 right-0 grid w-[149px] place-items-center bg-ink/10 text-muted"
-    >
-      <ImageIcon size={28} />
+    <div className="absolute inset-y-0 right-0 w-[45%]">
+      <Image src={src} alt="" fill sizes="200px" className="object-cover" />
     </div>
   );
 }
@@ -57,7 +54,7 @@ export function PromoCards() {
   return (
     <div className="mt-[11px] grid grid-cols-1 gap-[17px] md:grid-cols-2 lg:grid-cols-3">
       <a href="#" className={`${card} bg-promo-sage`}>
-        <PromoImage />
+        <PromoImage src="/live/promo-healthier.png" />
         <AdTag />
         <div className="absolute inset-y-5 left-5 flex w-[148px] flex-col items-start justify-between">
           <h2 className="font-serif text-card-title font-bold leading-[1.1] text-ink">
@@ -70,7 +67,7 @@ export function PromoCards() {
       </a>
 
       <a href="#" className={`${card} bg-promo-cream`}>
-        <PromoImage />
+        <PromoImage src="/live/promo-local.jpg" />
         <div className="absolute left-5 top-5 w-[148px]">
           <span className="block text-label font-bold text-ink">Featured local item</span>
           <div className="mt-2.5 flex items-center gap-1 text-small text-ink">
@@ -80,7 +77,7 @@ export function PromoCards() {
       </a>
 
       <a href="#" className={`${card} bg-promo-lilac md:col-span-2 lg:col-span-1`}>
-        <PromoImage />
+        <PromoImage src="/live/promo-inspiration.png" />
         <AdTag />
         <div className="absolute inset-y-5 left-5 flex w-[148px] flex-col items-start">
           <h2 className="font-serif text-card-title font-bold leading-[1.1] text-ink">
