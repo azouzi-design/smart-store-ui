@@ -1,11 +1,11 @@
-import { MapPin, Newspaper, Ticket } from "lucide-react";
+import { Newspaper, Ticket } from "lucide-react";
 import Image from "next/image";
 import { user } from "../_data";
 import { AdCarousel } from "./ad-carousel";
 import { Swoosh } from "./swoosh";
 
-// Mirrors the live .hero-clean / .hero-cta / .ptile-* rules; the promo tiles
-// are PROPOSED as a single carousel (see ad-carousel.tsx).
+// Mirrors the live .hero-clean / .hero-cta rules; the promo tiles are PROPOSED
+// as a single carousel of full-bleed ads (see ad-carousel.tsx).
 
 const cta =
   "inline-flex items-center gap-[9px] rounded-pill px-[26px] py-[13px] text-[clamp(14px,1.3vw,15.5px)] font-bold leading-none text-white shadow-pill hover:brightness-[1.06] max-[720px]:px-[18px] max-[720px]:py-3 max-[720px]:text-copy";
@@ -39,61 +39,34 @@ export function Hero() {
   );
 }
 
-function TileImage({ src }: { src: string }) {
-  return (
-    <div className="absolute right-0 top-0 h-full w-[46%]">
-      <Image src={src} alt="" fill sizes="(max-width: 900px) 46vw, 560px" className="object-cover" draggable={false} />
-    </div>
-  );
-}
-
-function AdTag() {
-  return (
-    <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
-      RMN ad placement
-    </span>
-  );
-}
-
-// Radius and shadow now live on the carousel viewport, not on each ad.
-const tile = "relative block h-full overflow-hidden text-ink";
-const body = "relative z-[2] flex h-full w-[58%] flex-col gap-[5px] p-5";
-const tileTitle = "font-serif text-card-title font-bold leading-[1.1]";
-const tileCta =
-  "mt-auto inline-flex items-center self-start rounded-pill px-[18px] py-[9px] text-ui font-bold shadow-chip";
+// PROPOSED: each ad is one full-bleed image (2.5:1 source). The art carries its own
+// headline and UI, so the slide is just a link; object-cover trims the edges when
+// the banner is narrower or taller than 2.5:1.
+const ads = [
+  { src: "/ads/ad-ai-basket.jpg", alt: "Ask Breezy: build a high-protein grocery basket for a family of 4" },
+  { src: "/ads/ad-shop-fresh.jpg", alt: "Shop fresh everywhere: Organic Farm Basket" },
+  { src: "/ads/ad-fresh-daily.jpg", alt: "Freshness delivered daily: organic strawberries, $3.99 per pound" },
+];
 
 /** PROPOSED: the three live promo tiles merged into one rotating ad slot. */
 export function PromoCards() {
-  const slides = [
-    <a key="healthier" href="#" className={`${tile} bg-promo-sage`}>
-      <AdTag />
-      <div className={body}>
-        <span className={tileTitle}>Healthier, Cheaper, Better.</span>
-        <span className={`${tileCta} bg-white text-success-deep`}>Shop Today</span>
-      </div>
-      <TileImage src="/live/promo-healthier.png" />
-    </a>,
-
-    <a key="local" href="#" className={`${tile} bg-promo-cream`}>
-      <div className={body}>
-        <span className="text-label font-bold">Featured local item</span>
-        <span className="mt-[5px] flex items-center gap-1 text-small opacity-85">
-          <MapPin size={12} aria-hidden /> From Stewart Farms
-        </span>
-      </div>
-      <TileImage src="/live/promo-local.jpg" />
-    </a>,
-
-    <a key="inspiration" href="#" className={`${tile} bg-promo-lilac`}>
-      <AdTag />
-      <div className={body}>
-        <span className={tileTitle}>Fresh inspiration delivered</span>
-        <span className="text-label opacity-90">Easy recipes and quality ingredients, all in one place</span>
-        <span className={`${tileCta} bg-violet text-white`}>Learn More</span>
-      </div>
-      <TileImage src="/live/promo-inspiration.png" />
-    </a>,
-  ];
+  const slides = ads.map(({ src, alt }, i) => (
+    <a key={src} href="#" className="relative block h-full overflow-hidden bg-promo-sage">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 800px) 100vw, 760px"
+        priority={i === 0}
+        draggable={false}
+        className="object-cover"
+      />
+      {/* Inherited from the live tiles: marks the slot as a retail-media-network placement. */}
+      <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
+        RMN ad placement
+      </span>
+    </a>
+  ));
 
   return (
     // PROPOSED size: centered under the hero copy; fills its column up to 760px.
