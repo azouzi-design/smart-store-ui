@@ -1,6 +1,6 @@
 import { ArrowRight, ArrowUpDown, ChevronDown, ChevronRight, Funnel, Plus } from "lucide-react";
 import Image from "next/image";
-import { departments, products, type Product } from "../_data";
+import { departments, products, totalItems, type Product } from "../_data";
 
 function ProductImage({ name, src }: { name: string; src: string }) {
   return (
@@ -69,7 +69,7 @@ export function Departments() {
       </div>
 
       <div className="mt-2 flex items-center justify-end gap-3 border-b border-line pb-2.5">
-        <span className="text-copy text-muted">114 results · 114 on sale</span>
+        <span className="text-copy text-muted">{totalItems} results · {totalItems} on sale</span>
         <button className="flex h-10 items-center gap-2 rounded-card border border-line bg-surface px-3.5 text-ui font-semibold text-ink">
           <Funnel size={15} aria-hidden /> Filter
         </button>
@@ -90,7 +90,7 @@ export function Departments() {
           href="#"
           className="flex h-10 items-center gap-2 rounded-pill border-[1.5px] border-brand bg-surface px-[22px] text-copy font-bold text-brand"
         >
-          View all 114 items <ArrowRight size={15} aria-hidden />
+          View all {totalItems} items <ArrowRight size={15} aria-hidden />
         </a>
       </div>
     </section>
