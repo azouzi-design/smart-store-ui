@@ -138,7 +138,7 @@ export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: stri
         if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
       }}
       onKeyDown={onKeyDown}
-      className="group/carousel relative h-[clamp(220px,20vw,300px)] max-[720px]:h-[clamp(176px,50vw,200px)]"
+      className="group/carousel relative aspect-[10/3] max-[720px]:aspect-auto max-[720px]:h-[clamp(176px,50vw,200px)]"
     >
       <div
         ref={viewportRef}

@@ -100,6 +100,38 @@
   }
 }
 
+/* PROPOSED — BA-1649 fall theme */
+@theme {
+  /* Pumpkin orange; replaces --color-success (#1da118) on the fall page. OKLCH hue 60°,
+     same chroma as the green, a touch lighter (L 0.66 vs 0.62). 3.28:1 on white
+     (green: 3.41:1); both are under AA 4.5:1 for small white text. */
+  --color-harvest: #e56a00;
+
+  /* Falling leaves */
+  --color-leaf-red: #b8321f;
+  --color-leaf-orange: #d9701a;
+  --color-leaf-gold: #e8a317;
+  --color-leaf-brown: #8a4b1f;
+  --color-leaf-light: #fff3c4;     /* gradient highlight */
+  --color-leaf-shade: #3b1a08;     /* gradient shadow, edges, veins */
+  --drop-shadow-leaf: 0 3px 4px rgb(59 26 8 / 0.28);
+
+  /* Outer element drops from above the viewport to below it; the inner svg sways and tilts in 3D */
+  --animate-leaf-fall: leaf-fall 7s linear both;
+  --animate-leaf-sway: leaf-sway 2s ease-in-out infinite alternate;
+
+  @keyframes leaf-fall {
+    from { transform: translateY(-20vh); }
+    to { transform: translateY(120vh); }
+  }
+
+  /* Tilts stay under ~55° so a leaf never turns edge-on and vanishes */
+  @keyframes leaf-sway {
+    from { transform: perspective(600px) translateX(calc(var(--sway) * -1)) rotate(calc(var(--tilt) - 28deg)) rotateX(22deg) rotateY(-50deg); }
+    to { transform: perspective(600px) translateX(var(--sway)) rotate(calc(var(--tilt) + 28deg)) rotateX(-14deg) rotateY(50deg); }
+  }
+}
+
 /* PROPOSED — BA-1638 in-store only deals */
 @theme {
   /* Weekly-ad price: big dollars, superscript cents */
