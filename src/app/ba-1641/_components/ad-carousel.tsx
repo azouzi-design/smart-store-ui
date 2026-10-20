@@ -214,8 +214,10 @@ export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: stri
                     key={active}
                     // When the timer fills, advance.
                     onAnimationEnd={() => step(1)}
-                    className={`absolute inset-0 origin-left rounded-pill bg-ink ${reducedMotion ? "" : "animate-carousel-progress"}`}
-                    style={{ animationPlayState: paused ? "paused" : "running" }}
+                    // CSS :hover also pauses it, so it holds even when the cursor is
+                    // already over the banner before mouseenter fires (e.g. after a scroll).
+                    className={`absolute inset-0 origin-left rounded-pill bg-ink group-hover/carousel:[animation-play-state:paused] ${reducedMotion ? "" : "animate-carousel-progress"}`}
+                    style={paused ? { animationPlayState: "paused" } : undefined}
                   />
                 )}
               </span>

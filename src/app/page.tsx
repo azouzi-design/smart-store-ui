@@ -9,6 +9,7 @@ const pages = [
   { title: "BA-1641", href: "/ba-1641" },
   { title: "BA-1642 ideation", href: "/ba-1642-ideation" },
   { title: "BA-1649", href: "/ba-1649" },
+  { title: "Smart Store Mobile", href: "/smart-store-mobile" },
 ];
 
 export default function Home() {

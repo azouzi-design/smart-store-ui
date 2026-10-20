@@ -100,6 +100,29 @@
   }
 }
 
+/*
+ * Mobile app (smart-store-mobile). INHERITED colors sampled from a screenshot of the
+ * live mobile app (2026-10-20); the cream header is --color-soft and the blue is
+ * --color-brand. The canvas and device frame are PROPOSED presentation only.
+ */
+@theme {
+  --color-m-ink: #0a0a0a;          /* prices, product names, active tab */
+  --color-m-muted: #5f5f5f;        /* placeholder, result count, unit price, tab labels */
+  --color-m-line: #ebebeb;         /* card and pill borders */
+  --color-m-divider: #f2f2f2;      /* tab bar top edge */
+  --color-m-nav: #d3d3d3;          /* Android nav bar glyphs */
+
+  --color-canvas: #fcfcfc;         /* PROPOSED: page behind the phone */
+  --color-device: #161616;         /* PROPOSED: phone bezel */
+  --shadow-device: 0 30px 60px -20px rgb(0 0 0 / 0.35), 0 12px 24px -12px rgb(0 0 0 / 0.2);
+}
+
+/* Android system font. inline: --font-roboto is set by the mobile page, not on :root,
+   so the utility must resolve it where it is used. */
+@theme inline {
+  --font-mobile: var(--font-roboto), Roboto, system-ui, sans-serif;
+}
+
 /* PROPOSED — BA-1649 fall theme */
 @theme {
   /* Pumpkin orange; replaces --color-success (#1da118) on the fall page. OKLCH hue 60°,
