@@ -48,50 +48,83 @@ export function Hero() {
 // - cropTop: share of the art's height cut from the top, chosen to keep the headline
 //   and price/CTA areas inside the banner
 const ads = [
-  { src: "/ads/ad-ai-basket.jpg", ratio: 2160 / 864, zoom: 1.34, cropTop: 0.13, alt: "Ask Breezy: build a high-protein grocery basket for a family of 4" },
   { src: "/ads/ad-shop-fresh.jpg", ratio: 2160 / 864, zoom: 1.19, cropTop: 0.025, alt: "Shop fresh everywhere: Organic Farm Basket" },
+  { src: "/ads/ad-ai-basket.jpg", ratio: 2160 / 864, zoom: 1.34, cropTop: 0.13, alt: "Ask Breezy: build a high-protein grocery basket for a family of 4" },
   { src: "/ads/ad-fresh-daily.jpg", ratio: 2128 / 912, zoom: 1.15, cropTop: 0.055, alt: "Freshness delivered daily: organic strawberries, $3.99 per pound" },
 ];
 
+// Banner shape on wide screens (see ad-carousel.tsx: aspect-[10/3]).
+const BANNER_RATIO = 10 / 3;
+
+// Progressive side blur: each layer blurs a narrower band at the edge, so the blur
+// ramps up toward the extremities instead of sitting there as one flat block.
+const BLUR_RAMP = [
+  { className: "backdrop-blur-xs", reach: 1 },
+  { className: "backdrop-blur-sm", reach: 0.66 },
+  { className: "backdrop-blur-lg", reach: 0.33 },
+];
+
+/** CSS mask that is opaque at both edges and clear across the middle. */
+function edgeMask(reach: number) {
+  const solid = reach * 0.4;
+  return `linear-gradient(90deg,#000 0%,#000 ${solid}%,transparent ${reach}%,transparent ${100 - reach}%,#000 ${100 - solid}%,#000 100%)`;
+}
+
 /** PROPOSED: the three live promo tiles merged into one rotating ad slot. */
 export function PromoCards() {
-  const slides = ads.map(({ src, ratio, zoom, cropTop, alt }, i) => (
-    <a key={src} href="#" className="relative block h-full overflow-hidden bg-promo-sage">
-      {/* PROPOSED (BA-1649): the banner is wider than the art. Each ad is enlarged as far as
-          its headline and price/CTA allow, centered, and any side gap left fades into a
-          blurred copy of itself. On narrow screens the art simply crops at the sides. */}
-      <Image
-        src={src}
-        alt=""
-        fill
-        sizes="(max-width: 1200px) 100vw, 1136px"
-        priority={i === 0}
-        draggable={false}
-        className="scale-110 object-cover blur-xl"
-      />
-      <div
-        className="absolute left-1/2 -translate-x-1/2 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)]"
-        style={{ aspectRatio: ratio, height: `${zoom * 100}%`, top: `${-zoom * cropTop * 100}%` }}
-      >
+  const slides = ads.map(({ src, ratio, zoom, cropTop, alt }, i) => {
+    // % of the banner width left uncovered on each side by the (zoomed) art
+    const side = Math.max(0, (1 - (zoom * ratio) / BANNER_RATIO) / 2) * 100;
+    // the ramp starts a little inside the art so it also softens the seam
+    const reach = side > 0 ? side + 5 : 0;
+    return (
+      <a key={src} href="#" className="relative block h-full overflow-hidden bg-promo-sage">
+        {/* PROPOSED (BA-1649): the banner is wider than the art. Each ad is enlarged as far as
+            its headline and price/CTA allow and centered; any side gap shows the art stretched
+            to cover, under a blur that ramps up toward the edges. On narrow screens the art
+            simply crops at the sides. */}
         <Image
           src={src}
-          alt={alt}
+          alt=""
           fill
           sizes="(max-width: 1200px) 100vw, 1136px"
           priority={i === 0}
           draggable={false}
           className="object-cover"
         />
-      </div>
-      {/* Inherited from the live tiles: marks the slot as a retail-media-network placement. */}
-      <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
-        RMN ad placement
-      </span>
-    </a>
-  ));
+        <div
+          className="absolute left-1/2 -translate-x-1/2 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)]"
+          style={{ aspectRatio: ratio, height: `${zoom * 100}%`, top: `${-zoom * cropTop * 100}%` }}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 1200px) 100vw, 1136px"
+            priority={i === 0}
+            draggable={false}
+            className="object-cover"
+          />
+        </div>
+        {reach > 0 &&
+          BLUR_RAMP.map(({ className, reach: k }) => (
+            <div
+              key={className}
+              aria-hidden
+              className={`pointer-events-none absolute inset-0 max-[720px]:hidden ${className}`}
+              style={{ maskImage: edgeMask(reach * k) }}
+            />
+          ))}
+        {/* Inherited from the live tiles: marks the slot as a retail-media-network placement. */}
+        <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
+          RMN ad placement
+        </span>
+      </a>
+    );
+  });
 
   return (
-    // PROPOSED size (BA-1649): spans the same container as Departments, at 3.33:1; ads are enlarged to fit, with blurred side fill where needed.
+    // PROPOSED size (BA-1649): spans the same container as Departments, at 3.33:1; ads are enlarged to fit, with a ramped side blur where needed.
     <div className="w-full">
       <AdCarousel slides={slides} label="Featured ads" />
     </div>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Departments } from "./_components/departments";
-import { FallingLeaves } from "./_components/falling-leaves";
 import { SiteFooter, TrustStrip } from "./_components/footer";
 import { BreezyFab, ForYou } from "./_components/floating";
 import { InfoBar, SiteHeader } from "./_components/header";
@@ -57,8 +56,6 @@ export default function Page() {
 
       <ForYou />
       <BreezyFab />
-      {/* PROPOSED (BA-1649 fall theme): one-off falling leaves, like Google's "fall season" search */}
-      <FallingLeaves />
     </>
   );
 }

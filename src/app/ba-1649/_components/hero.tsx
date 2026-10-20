@@ -41,48 +41,32 @@ export function Hero() {
   );
 }
 
-// PROPOSED: each ad is one full-bleed image. The art carries its own headline and
-// UI, so the slide is just a link.
-// - ratio: the source image's width / height
-// - zoom: how much taller than the banner the art is drawn (1 = whole ad, full height)
-// - cropTop: share of the art's height cut from the top, chosen to keep the headline
-//   and price/CTA areas inside the banner
+// PROPOSED (BA-1649): fall-season ads, designed at the banner's own 10:3 shape
+// (1200×360 frame, exported @4x), so on wide screens each one fills the banner exactly, uncropped.
+// The art carries its own headline and CTA, so the slide is just a link.
+// - focusX: horizontal focus on phones, where the banner keeps its height and
+//   crops the sides; points at each ad's headline
 const ads = [
-  { src: "/ads/ad-ai-basket.jpg", ratio: 2160 / 864, zoom: 1.34, cropTop: 0.13, alt: "Ask Breezy: build a high-protein grocery basket for a family of 4" },
-  { src: "/ads/ad-shop-fresh.jpg", ratio: 2160 / 864, zoom: 1.19, cropTop: 0.025, alt: "Shop fresh everywhere: Organic Farm Basket" },
-  { src: "/ads/ad-fresh-daily.jpg", ratio: 2128 / 912, zoom: 1.15, cropTop: 0.055, alt: "Freshness delivered daily: organic strawberries, $3.99 per pound" },
+  { src: "/ads/ad-fall-season-1.png", focusX: 100, alt: "From Stewart Farms: featured local item, pumpkins. Shop today" },
+  { src: "/ads/ad-fall-season-2.png", focusX: 0, alt: "Easy recipes and quality ingredients, all in one place" },
+  { src: "/ads/ad-fall-season-3.png", focusX: 50, alt: "Freshly delivered fall season food" },
 ];
 
 /** PROPOSED: the three live promo tiles merged into one rotating ad slot. */
 export function PromoCards() {
-  const slides = ads.map(({ src, ratio, zoom, cropTop, alt }, i) => (
+  const slides = ads.map(({ src, focusX, alt }, i) => (
     <a key={src} href="#" className="relative block h-full overflow-hidden bg-promo-sage">
-      {/* PROPOSED (BA-1649): the banner is wider than the art. Each ad is enlarged as far as
-          its headline and price/CTA allow, centered, and any side gap left fades into a
-          blurred copy of itself. On narrow screens the art simply crops at the sides. */}
       <Image
         src={src}
-        alt=""
+        alt={alt}
         fill
         sizes="(max-width: 1200px) 100vw, 1136px"
+        quality={90}
         priority={i === 0}
         draggable={false}
-        className="scale-110 object-cover blur-xl"
+        className="object-cover"
+        style={{ objectPosition: `${focusX}% center` }}
       />
-      <div
-        className="absolute left-1/2 -translate-x-1/2 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)]"
-        style={{ aspectRatio: ratio, height: `${zoom * 100}%`, top: `${-zoom * cropTop * 100}%` }}
-      >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes="(max-width: 1200px) 100vw, 1136px"
-          priority={i === 0}
-          draggable={false}
-          className="object-cover"
-        />
-      </div>
       {/* Inherited from the live tiles: marks the slot as a retail-media-network placement. */}
       <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
         RMN ad placement
@@ -91,7 +75,7 @@ export function PromoCards() {
   ));
 
   return (
-    // PROPOSED size (BA-1649): spans the same container as Departments, at 3.33:1; ads are enlarged to fit, with blurred side fill where needed.
+    // PROPOSED size (BA-1649): spans the same container as Departments, at 3.33:1, the same shape as the ad art.
     <div className="w-full">
       <AdCarousel slides={slides} label="Featured ads" />
     </div>
