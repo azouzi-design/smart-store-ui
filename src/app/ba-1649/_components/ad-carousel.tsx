@@ -11,7 +11,7 @@ import { type ReactNode, useEffect, useRef, useState, useSyncExternalStore } fro
  * - Loops seamlessly: a clone of each end slide sits beyond the edges, so
  *   3 → 1 keeps moving forward instead of rewinding across the whole track.
  * - Swipe / drag, arrow keys, dots and the hover arrows move it by hand.
- * - Pauses while hovered, focused, dragged, off screen or in a hidden tab.
+ * - Pauses while focused, dragged, off screen or in a hidden tab.
  *   Reduced-motion users get no autoplay at all.
  */
 export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: string }) {
@@ -19,7 +19,6 @@ export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: stri
   // Track = [last clone, ...slides, first clone]; pos indexes into it.
   const [pos, setPos] = useState(1);
   const [animate, setAnimate] = useState(true);
-  const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [visible, setVisible] = useState(true);
   const [drag, setDrag] = useState<number | null>(null); // px offset while dragging
@@ -32,7 +31,7 @@ export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: stri
   const reducedMotion = useSyncExternalStore(subscribeReducedMotion, getReducedMotion, () => false);
 
   const active = (((pos - 1) % n) + n) % n;
-  const paused = reducedMotion || hovered || focused || !visible || drag !== null;
+  const paused = reducedMotion || focused || !visible || drag !== null;
 
 
   // Pause when scrolled away or the tab is hidden.
@@ -131,8 +130,6 @@ export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: stri
       ref={rootRef}
       aria-roledescription="carousel"
       aria-label={label}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       onFocus={(e) => setFocused(e.target.matches(":focus-visible"))}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
@@ -214,9 +211,7 @@ export function AdCarousel({ slides, label }: { slides: ReactNode[]; label: stri
                     key={active}
                     // When the timer fills, advance.
                     onAnimationEnd={() => step(1)}
-                    // CSS :hover also pauses it, so it holds even when the cursor is
-                    // already over the banner before mouseenter fires (e.g. after a scroll).
-                    className={`absolute inset-0 origin-left rounded-pill bg-ink group-hover/carousel:[animation-play-state:paused] ${reducedMotion ? "" : "animate-carousel-progress"}`}
+                    className={`absolute inset-0 origin-left rounded-pill bg-ink ${reducedMotion ? "" : "animate-carousel-progress"}`}
                     style={paused ? { animationPlayState: "paused" } : undefined}
                   />
                 )}
