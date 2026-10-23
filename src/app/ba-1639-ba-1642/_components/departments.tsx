@@ -15,7 +15,7 @@ import {
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { ArrowRight, ArrowUpDown, Funnel } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { departments, products, totalItems, type Product } from "../_data";
 
 /*
@@ -108,8 +108,28 @@ function ResultsControls() {
   );
 }
 
+/** Below lg the chips scroll sideways; fade whichever edge still has chips past it. */
+function useScrollFade() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: false, end: false });
+  const update = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const start = el.scrollLeft > 1;
+    const end = el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
+    setEdges((e) => (e.start === start && e.end === end ? e : { start, end }));
+  }, []);
+  useEffect(() => {
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [update]);
+  return { ref, onScroll: update, edges };
+}
+
 export function Departments() {
   const [active, setActive] = useState(departments[0]);
+  const fade = useScrollFade();
   return (
     <section className="mt-[clamp(10px,2vw,22px)]">
       <h2 className="mb-5 font-serif text-h2 font-bold tracking-tight text-ink">Departments</h2>
@@ -119,7 +139,15 @@ export function Departments() {
           <div
             role="tablist"
             aria-orientation="vertical"
-            className="flex flex-wrap gap-2 pb-1 lg:flex-col lg:flex-nowrap lg:gap-0.5"
+            ref={fade.ref}
+            onScroll={fade.onScroll}
+            style={
+              {
+                "--fade-start": fade.edges.start ? "transparent" : "#000",
+                "--fade-end": fade.edges.end ? "transparent" : "#000",
+              } as React.CSSProperties
+            }
+            className="flex gap-2 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-lg:[mask-image:linear-gradient(90deg,var(--fade-start),#000_32px,#000_calc(100%-32px),var(--fade-end))] lg:flex-col lg:gap-0.5 lg:overflow-visible lg:py-0 lg:pb-1"
           >
             {departments.map((d) => {
               const on = d === active;

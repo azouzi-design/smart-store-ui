@@ -67,10 +67,6 @@ export function PromoCards() {
         className="object-cover"
         style={{ objectPosition: `${focusX}% center` }}
       />
-      {/* Inherited from the live tiles: marks the slot as a retail-media-network placement. */}
-      <span className="absolute right-2.5 top-2.5 z-[3] rounded-xs bg-white/85 px-[9px] py-[3px] text-tag font-semibold text-ad-tag opacity-90">
-        RMN ad placement
-      </span>
     </a>
   ));
 
