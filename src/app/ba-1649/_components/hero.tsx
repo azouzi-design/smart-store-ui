@@ -1,11 +1,9 @@
 import { Newspaper, Ticket } from "lucide-react";
-import Image from "next/image";
 import { user } from "../_data";
-import { AdCarousel } from "./ad-carousel";
 import { Swoosh } from "./swoosh";
 
-// Mirrors the live .hero-clean / .hero-cta rules; the promo tiles are PROPOSED
-// as a single carousel of full-bleed ads (see ad-carousel.tsx).
+// Mirrors the live .hero-clean / .hero-cta rules; the promo tiles below the hero
+// are PROPOSED as a single carousel of seasonal ads (see promo-cards.tsx).
 
 const cta =
   "inline-flex items-center gap-[9px] rounded-pill px-[26px] py-[13px] text-[clamp(14px,1.3vw,15.5px)] font-bold leading-none text-white shadow-pill hover:brightness-[1.06] max-[720px]:px-[18px] max-[720px]:py-3 max-[720px]:text-copy";
@@ -38,42 +36,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
-}
-
-// PROPOSED (BA-1649): fall-season ads, designed at the banner's own 10:3 shape
-// (1200×360 frame, exported @4x), so on wide screens each one fills the banner exactly, uncropped.
-// The art carries its own headline and CTA, so the slide is just a link.
-// - focusX: horizontal focus on phones, where the banner keeps its height and
-//   crops the sides; points at each ad's headline
-const ads = [
-  { src: "/ads/ad-fall-season-1.png", focusX: 100, alt: "From Stewart Farms: featured local item, pumpkins. Shop today" },
-  { src: "/ads/ad-fall-season-2.png", focusX: 0, alt: "Easy recipes and quality ingredients, all in one place" },
-  { src: "/ads/ad-fall-season-3.png", focusX: 50, alt: "Freshly delivered fall season food" },
-];
-
-/** PROPOSED: the three live promo tiles merged into one rotating ad slot. */
-export function PromoCards() {
-  const slides = ads.map(({ src, focusX, alt }, i) => (
-    <a key={src} href="#" className="relative block h-full overflow-hidden bg-promo-sage">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes="(max-width: 1200px) 100vw, 1136px"
-        quality={90}
-        priority={i === 0}
-        draggable={false}
-        className="object-cover"
-        style={{ objectPosition: `${focusX}% center` }}
-      />
-    </a>
-  ));
-
-  return (
-    // PROPOSED size (BA-1649): spans the same container as Departments, at 3.33:1, the same shape as the ad art.
-    <div className="w-full">
-      <AdCarousel slides={slides} label="Featured ads" />
-    </div>
   );
 }

@@ -123,36 +123,22 @@
   --font-mobile: var(--font-roboto), Roboto, system-ui, sans-serif;
 }
 
-/* PROPOSED — BA-1649 fall theme */
+/* PROPOSED — BA-1649 seasonal themes. Each accent replaces the inherited green
+   (--color-success, #1da118, 3.41:1 on white) for its season. Contrast is for white
+   text on the color; under 4.5:1 fails AA for small white text, as the green does.
+   The foreground animation's palette lives in src/app/ba-1649/_fx/seasonal-fx.js,
+   which is kept standalone so it can be handed to dev as one file.
+
+   "Foody" rule: every accent sits in fall's brightness band (OKLCH lightness
+   0.53–0.66, chroma as high as sRGB allows) and is named after a food, not a flag.
+   Picked on 2026-10-29 from three options per season. */
 @theme {
-  /* Pumpkin orange; replaces --color-success (#1da118) on the fall page. OKLCH hue 60°,
-     same chroma as the green, a touch lighter (L 0.66 vs 0.62). 3.28:1 on white
-     (green: 3.41:1); both are under AA 4.5:1 for small white text. */
-  --color-harvest: #e56a00;
-
-  /* Falling leaves */
-  --color-leaf-red: #b8321f;
-  --color-leaf-orange: #d9701a;
-  --color-leaf-gold: #e8a317;
-  --color-leaf-brown: #8a4b1f;
-  --color-leaf-light: #fff3c4;     /* gradient highlight */
-  --color-leaf-shade: #3b1a08;     /* gradient shadow, edges, veins */
-  --drop-shadow-leaf: 0 3px 4px rgb(59 26 8 / 0.28);
-
-  /* Outer element drops from above the viewport to below it; the inner svg sways and tilts in 3D */
-  --animate-leaf-fall: leaf-fall 7s linear both;
-  --animate-leaf-sway: leaf-sway 2s ease-in-out infinite alternate;
-
-  @keyframes leaf-fall {
-    from { transform: translateY(-20vh); }
-    to { transform: translateY(120vh); }
-  }
-
-  /* Tilts stay under ~55° so a leaf never turns edge-on and vanishes */
-  @keyframes leaf-sway {
-    from { transform: perspective(600px) translateX(calc(var(--sway) * -1)) rotate(calc(var(--tilt) - 28deg)) rotateX(22deg) rotateY(-50deg); }
-    to { transform: perspective(600px) translateX(var(--sway)) rotate(calc(var(--tilt) + 28deg)) rotateX(-14deg) rotateY(50deg); }
-  }
+  --color-season-fall: #e56a00;            /* pumpkin, 3.28:1 */
+  --color-season-christmas: #06915f;       /* holly, 4.02:1; bluer and deeper than the inherited green */
+  --color-season-hanukkah: #545be9;        /* blueberry, 5.20:1; leans violet so it reads apart from --color-brand */
+  --color-season-fourth-of-july: #f53512;  /* firecracker, 3.90:1 */
+  --color-season-memorial-day: #d0183a;    /* cherry pie, 5.42:1 */
+  --color-season-new-year: #bd8407;        /* champagne, 3.23:1; the most gold that keeps ≥ 3:1 for "Shopping" */
 }
 
 /* PROPOSED — BA-1638 in-store only deals */

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Departments } from "./_components/departments";
-import { FallingLeaves } from "./_components/falling-leaves";
 import { SiteFooter, TrustStrip } from "./_components/footer";
 import { BreezyFab, ForYou } from "./_components/floating";
 import { InfoBar, SiteHeader } from "./_components/header";
-import { Hero, PromoCards } from "./_components/hero";
+import { Hero } from "./_components/hero";
+import { PromoCards } from "./_components/promo-cards";
+import { SeasonProvider, SeasonSwitcher } from "./_components/season";
 
 export const metadata: Metadata = {
   title: "BA-1649",
@@ -18,9 +19,10 @@ export const metadata: Metadata = {
  */
 export default function Page() {
   return (
-    // PROPOSED (BA-1649 fall theme): the inherited green (--color-success) becomes pumpkin orange
-    // everywhere on this page — "Shopping", the Sales Ad button, prices and SALE tags.
-    <div className="contents [--color-success:var(--color-harvest)]">
+    // PROPOSED (BA-1649 seasonal themes): each season swaps the inherited green (--color-success)
+    // everywhere on this page — "Shopping", the Sales Ad button, prices and SALE tags — plus the
+    // carousel ads and a one-off foreground animation. ?theme=<id> opens a season (see ./_seasons.ts).
+    <SeasonProvider>
       <SiteHeader />
       <InfoBar />
 
@@ -59,8 +61,7 @@ export default function Page() {
 
       <ForYou />
       <BreezyFab />
-      {/* PROPOSED (BA-1649 fall theme): one-off falling leaves, like Google's "fall season" search */}
-      <FallingLeaves />
-    </div>
+      <SeasonSwitcher />
+    </SeasonProvider>
   );
 }
