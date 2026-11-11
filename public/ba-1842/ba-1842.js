@@ -140,6 +140,11 @@
     { id: "a", name: "Photo tiles", why: "Shoppers recognise a bottle faster than a word. Each subcategory shows a product thumbnail, and the row scrolls on one line instead of wrapping to two." },
     { id: "b", name: "Icon pills, one line", why: "Same chip pattern, but with an icon, a count badge, an explicit All, and one scrolling line. The closest step from today." },
     { id: "c", name: "Tabs + More", why: "Ranked by item count: the five biggest stay visible and the long tail (Gin · 1) moves into More, so there are fewer choices." },
+    // Round 2 (client: "not elegant and minimalistic enough"). Each must read differently from the
+    // mobile department chips, which are white, bordered, fully rounded pills with an icon.
+    { id: "d", name: "Quiet text tabs", why: "Type only: no boxes, borders or icons. Selection is a primary underline. Nothing like the bordered department pills above it." },
+    { id: "e", name: "Round thumbnails", why: "Small circular product photos with a one-word caption and no counts. Keeps A's imagery at a fraction of the weight." },
+    { id: "f", name: "Soft chips", why: "Borderless, softly squared chips on a neutral fill, no icons. Same tap-and-go as pills, but a different shape and weight from the departments." },
   ];
   const jump = () =>
     h("nav", { class: "ba-jump", "aria-label": "Jump to direction" },
@@ -233,13 +238,51 @@
     ink.style.transform = `translateX(${r.left - bar.left}px)`;
   }
 
-  /* ---------- mount: inherited first, then A/B/C ---------- */
+  /* ---------- D · quiet text tabs ---------- */
+  function buildD() {
+    const track = h("div", { class: "ba-track ba-d", role: "group", "aria-label": "Beer, Wine & Spirits types" },
+      [all, ...cats].map((c) =>
+        btn(c, "ba-d-tab", h("span", { class: "ba-d-label" }, c.label), h("span", { class: "ba-d-n" }, fmt(c.count)))));
+    const wrap = scroller(track);
+    wrap.classList.add("ba-noarrows");
+    return h("div", { class: "ba-d-bar" }, wrap);
+  }
+
+  /* ---------- E · round thumbnails ---------- */
+  function buildE() {
+    const track = h("div", { class: "ba-track ba-e", role: "group", "aria-label": "Beer, Wine & Spirits types" },
+      [all, ...cats].map((c) => {
+        const src = thumb(c);
+        const b = btn(c, "ba-e-item",
+          h("span", { class: "ba-e-disc" },
+            src ? h("img", { src, alt: "", loading: "lazy" }) : h("span", { class: "ba-e-all" }, "All")),
+          // short caption keeps every label on one line: "Hard Seltzer, Cider & Cocktails" -> "Hard Seltzer"
+          h("span", { class: "ba-e-label" }, c.label.split(/,| &/)[0]));
+        b.title = `${c.label} · ${fmt(c.count)}`;
+        return b;
+      }));
+    const wrap = scroller(track);
+    wrap.classList.add("ba-noarrows");
+    return wrap;
+  }
+
+  /* ---------- F · soft chips ---------- */
+  function buildF() {
+    const track = h("div", { class: "ba-track ba-f", role: "group", "aria-label": "Beer, Wine & Spirits types" },
+      [all, ...cats].map((c) =>
+        btn(c, "ba-f-chip", h("span", { class: "ba-f-face" }, c.label, h("span", { class: "ba-f-n" }, fmt(c.count))))));
+    const wrap = scroller(track);
+    wrap.classList.add("ba-noarrows");
+    return wrap;
+  }
+
+  /* ---------- mount: inherited first, then the directions ---------- */
   const taxa = baseRow.closest(".shop-taxa");
   const baseSection = h("section", { class: "ba-variant", id: "ba-v-base" },
     tag("Inherited · current", "Live pills", "Today's row from the live page, untouched. It now filters too, so you can compare."));
   taxa.before(baseSection);
   baseSection.append(taxa);
-  const builders = { a: buildA, b: buildB, c: buildC };
+  const builders = { a: buildA, b: buildB, c: buildC, d: buildD, e: buildE, f: buildF };
   let anchor = baseSection;
   VARIANTS.forEach((v) => {
     const s = h("section", { class: "ba-variant", id: `ba-v-${v.id}` },
@@ -253,15 +296,19 @@
     { id: "base", key: "Current", name: "Live pills" },
     ...VARIANTS.map((v) => ({ id: v.id, key: v.id.toUpperCase(), name: v.name })),
   ];
-  // Option A is the chosen direction. Flip SHOW_SWITCHER to bring the Current/A/B/C bar back.
-  const SHOW_SWITCHER = false;
-  const DEFAULT_VIEW = "a";
-  const STORE = "ba-1842-view";
+  // Round 2: compare the shared option A against the new minimal directions.
+  // Base, B and C stay built; add their ids here to put them back in the bar.
+  // ?v=f (or a/b/c/d/e/base) pins one design for sharing: no switcher, no saved pick.
+  const PINNED = new URLSearchParams(location.search).get("v");
+  const SHOW_SWITCHER = !PINNED;
+  const SWITCHER_VIEWS = ["a", "d", "e", "f"];
+  const DEFAULT_VIEW = "d";
+  const STORE = "ba-1842-view-r2";
   const read = () => { try { return localStorage.getItem(STORE); } catch { return null; } };
   const write = (v) => { try { localStorage.setItem(STORE, v); } catch {} };
   const caption = h("span", { class: "ba-sw-cap", "aria-live": "polite" });
   const seg = h("div", { class: "ba-sw-seg", role: "radiogroup", "aria-label": "Pill design" },
-    views.map((v) => h("button", {
+    views.filter((v) => SWITCHER_VIEWS.includes(v.id)).map((v) => h("button", {
       type: "button", role: "radio", class: "ba-sw-btn", "data-view": v.id, "aria-checked": "false",
       title: v.name, onclick: () => show(v.id),
     }, v.key)));
@@ -279,9 +326,14 @@
   addEventListener("keydown", (e) => {
     if (!SHOW_SWITCHER) return;
     if (e.target.closest("input, select, textarea") || e.metaKey || e.ctrlKey || e.altKey) return;
-    const i = ["0", "1", "2", "3"].indexOf(e.key); // 0 = Current, 1–3 = A–C
-    if (i >= 0) show(views[i].id);
+    const i = Number(e.key) - 1; // 1–4 = the switcher's buttons, left to right
+    if (SWITCHER_VIEWS[i]) show(SWITCHER_VIEWS[i]);
   });
-  show(SHOW_SWITCHER ? read() || DEFAULT_VIEW : DEFAULT_VIEW);
+  const saved = read();
+  if (PINNED && views.some((v) => v.id === PINNED)) {
+    document.querySelectorAll(".ba-variant").forEach((s) => s.classList.toggle("is-shown", s.id === `ba-v-${PINNED}`));
+  } else {
+    show(SHOW_SWITCHER && SWITCHER_VIEWS.includes(saved) ? saved : DEFAULT_VIEW);
+  }
   sync();
 })();
