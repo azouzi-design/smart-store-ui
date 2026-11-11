@@ -193,3 +193,109 @@ body.ba-solo .ba-tag { display: none; }
 .ba-f-chip.is-on .ba-f-n { color: rgb(255 255 255 / .75); }
 .ba-f-chip:focus-visible { outline: none; }
 .ba-f-chip:focus-visible .ba-f-face { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+
+/* ======================= Round 3 — subcategories inside the department menu ======================= */
+/* Everything below is gated on body[data-ba-view]; other views are unaffected. */
+.ba-g-sub, .ba-g-mobile, .ba-dept-cur, .ba-dept-caret, .ba-h-panel, .ba-h-backdrop { display: none; }
+body[data-ba-view="g"] .shop-side .dtab[data-tab="beerWine"],
+body[data-ba-view="h"] .shop-side .dtab[data-tab="beerWine"] { --ba-tint: color-mix(in srgb, var(--c-primary) 6%, transparent);
+  --ba-tint-2: color-mix(in srgb, var(--c-primary) 12%, transparent); }
+body[data-ba-view="g"] .shop-side, body[data-ba-view="h"] .shop-side, .ba-h-panel {
+  --ba-tint: color-mix(in srgb, var(--c-primary) 6%, transparent);
+  --ba-tint-2: color-mix(in srgb, var(--c-primary) 12%, transparent); }
+
+/* caret on the department tab */
+body[data-ba-view="g"] .ba-dept-caret, body[data-ba-view="h"] .ba-dept-caret { display: inline-block; width: 16px; height: 16px; margin-left: auto; color: var(--c-muted); transition: transform .2s var(--ba-ease); }
+body[data-ba-view="g"] .dtab.ba-open .ba-dept-caret { transform: rotate(180deg); }
+body[data-ba-view="g"] .dtab:not(.on) .ba-dept-caret, body[data-ba-view="h"] .dtab:not(.on) .ba-dept-caret { opacity: .45; }
+body[data-ba-view="h"].ba-h-open .dtab[aria-expanded="true"] .ba-dept-caret { transform: rotate(-90deg); }
+
+/* ---------- G · desktop: nested list (quieter than the parent) ---------- */
+@media (min-width: 1024px) {
+  body[data-ba-view="g"] .ba-g-sub { display: flex; flex-direction: column; margin: 0 0 6px 21px; padding-left: 10px; border-left: 1px solid var(--c-line); }
+  body[data-ba-view="g"].ba-g-collapsed .ba-g-sub { display: none; }
+  .ba-g-item { position: relative; display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: none;
+    font: inherit; font-size: 12.5px; font-weight: 400; color: var(--c-muted); cursor: pointer; text-align: left; transition: color .15s, background .15s; }
+  .ba-g-label { flex: 1; line-height: 1.25; padding: 6px 0; }
+  .ba-g-n { font-size: 11px; color: color-mix(in srgb, var(--c-muted) 75%, #fff); font-variant-numeric: tabular-nums; }
+  .ba-g-item:hover { color: var(--c-text); }
+  .ba-g-item.is-on { color: var(--c-primary); font-weight: 500; }
+  .ba-g-item.is-on .ba-g-n { color: color-mix(in srgb, var(--c-primary) 60%, #fff); }
+  .ba-g-item.is-on::before { content: ""; position: absolute; left: -11px; top: 7px; bottom: 7px; width: 1.5px; border-radius: 2px; background: var(--c-primary); }
+  .ba-g-item:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
+}
+/* ---------- G · mobile/tablet: attached text row under the department chips ---------- */
+@media (max-width: 1023px) {
+  body[data-ba-view="g"] .ba-g-mobile { display: block; margin: 2px 0 0; border-bottom: 1px solid var(--c-line); }
+  .ba-g-row { gap: 22px; padding: 0 2px; margin: 0; align-items: stretch; }
+  body[data-ba-view="g"] .ba-dept-caret { display: none; }
+}
+
+/* ---------- H · overlay ---------- */
+body[data-ba-view="h"] .ba-h-backdrop { display: block; position: fixed; inset: 0; z-index: 2147483000; background: rgb(0 0 0 / 0); pointer-events: none; transition: background .25s; }
+body[data-ba-view="h"].ba-h-open .ba-h-backdrop { pointer-events: auto; background: rgb(0 0 0 / .08); }
+body[data-ba-view="h"] .ba-h-panel { display: flex; flex-direction: column; position: fixed; z-index: 2147483001; background: #fff;
+  font-family: Inter, system-ui, sans-serif; color: var(--c-text); visibility: hidden; opacity: 0;
+  transition: opacity .2s var(--ba-ease), transform .25s var(--ba-ease), visibility 0s .25s; }
+body[data-ba-view="h"].ba-h-open .ba-h-panel { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+.ba-h-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 8px 12px; }
+.ba-h-title { font-size: 15px; font-weight: 650; }
+.ba-h-close { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: none; color: var(--c-muted); cursor: pointer; }
+.ba-h-close:hover { background: #f4f4f4; color: var(--c-text); }
+.ba-h-close .ba-ico { width: 18px; height: 18px; }
+.ba-h-item { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: none;
+  font: inherit; color: var(--c-text); cursor: pointer; text-align: left; transition: background .15s; }
+.ba-h-disc { flex: none; width: 40px; height: 40px; border-radius: 50%; background: #f5f5f5; display: grid; place-items: center; overflow: hidden; }
+.ba-h-disc img { width: 66%; height: 66%; object-fit: contain; mix-blend-mode: multiply; }
+.ba-h-disc .ba-e-all { font-size: 12px; }
+.ba-h-label { flex: 1; font-size: 14px; font-weight: 500; line-height: 1.3; }
+.ba-h-n { font-size: 12px; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+.ba-h-check { width: 16px; height: 16px; color: var(--c-primary); opacity: 0; }
+.ba-h-item:hover { background: var(--ba-tint); }
+
+.ba-h-item.is-on { background: var(--ba-tint); }
+.ba-h-item.is-on .ba-h-label { color: var(--c-primary); font-weight: 600; }
+.ba-h-item.is-on .ba-h-check { opacity: 1; }
+.ba-h-item:focus-visible, .ba-h-close:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
+.ba-h-grab { display: none; }
+
+/* desktop: flyout beside the sidebar, two columns */
+@media (min-width: 1024px) {
+  body[data-ba-view="h"] .ba-h-panel { left: var(--ba-h-left, 280px); top: var(--ba-h-top, 120px); width: 300px; max-height: calc(100vh - 100px);
+    padding: 12px 8px 8px; border: 1px solid var(--c-line); border-radius: 14px; box-shadow: 0 18px 48px rgb(0 0 0 / .14); transform: translateX(-6px); }
+  .ba-h-list { display: flex; flex-direction: column; gap: 1px; overflow-y: auto; }
+  body[data-ba-view="h"].ba-h-open .shop-side .dtab[aria-expanded="true"] { background: var(--ba-tint-2); }
+}
+/* mobile/tablet: bottom sheet */
+@media (max-width: 1023px) {
+  body[data-ba-view="h"].ba-h-open .ba-h-backdrop { background: rgb(0 0 0 / .32); }
+  body[data-ba-view="h"] .ba-h-panel { left: 0; right: 0; bottom: 0; max-height: 78vh; padding: 8px 8px max(12px, env(safe-area-inset-bottom));
+    border-radius: 18px 18px 0 0; box-shadow: 0 -8px 32px rgb(0 0 0 / .16); transform: translateY(24px); }
+  .ba-h-grab { display: block; width: 36px; height: 4px; margin: 0 auto 8px; border-radius: 4px; background: #d4d4d4; }
+  .ba-h-list { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .ba-h-panel, .ba-h-backdrop { transition: none !important; } }
+
+/* current subcategory on the department tab */
+@media (min-width: 1024px) {
+  body[data-ba-view="h"] .ba-dept-cur { display: block; position: absolute; left: 42px; bottom: 3px; font-size: 11px; font-weight: 500; color: var(--c-muted); }
+  body[data-ba-view="h"] .dtab.ba-has-cur .dtab-label { transform: translateY(-6px); }
+}
+@media (max-width: 1023px) {
+  body[data-ba-view="h"] .ba-dept-cur:not(:empty) { display: inline; font-weight: 500; color: var(--c-muted); }
+  body[data-ba-view="h"] .ba-dept-cur:not(:empty)::before { content: "·"; margin: 0 6px 0 -2px; }
+  body[data-ba-view="h"] .ba-dept-caret { margin-left: -2px; }
+}
+@media (max-width: 1023px) {
+  body[data-ba-view="h"].ba-h-open .dtab[aria-expanded="true"] .ba-dept-caret { transform: rotate(180deg); }
+  body[data-ba-view="h"] .dtab:not(.on) .ba-dept-caret { display: none; } /* chip row stays clean; only the active chip shows a caret */
+}
+
+/* H: "All …" row reads as the department, the rest as its types */
+.ba-h-list > :first-child { margin-bottom: 4px; }
+.ba-h-list > :first-child::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -3px; height: 1px; background: var(--c-line); }
+.ba-h-item { position: relative; }
+
+/* placeholder product photo for mock departments */
+.ba-ph { display: grid; place-items: center; width: 100%; aspect-ratio: 1; border-radius: 10px; background: #f5f5f5; color: color-mix(in srgb, var(--c-primary) 35%, #fff); }
+.ba-ph .ba-ico { width: 34%; height: 34%; }
