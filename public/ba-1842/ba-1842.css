@@ -233,7 +233,9 @@ body[data-ba-view="h"].ba-h-open .dtab[aria-expanded="true"] .ba-dept-caret { tr
 
 /* ---------- H · overlay ---------- */
 body[data-ba-view="h"] .ba-h-backdrop { display: block; position: fixed; inset: 0; z-index: 2147483000; background: rgb(0 0 0 / 0); pointer-events: none; transition: background .25s; }
-body[data-ba-view="h"].ba-h-open .ba-h-backdrop { pointer-events: auto; background: rgb(0 0 0 / .08); }
+/* no dimming: the backdrop is invisible; on touch it only catches taps outside the sheet */
+body[data-ba-view="h"].ba-h-open .ba-h-backdrop { pointer-events: auto; }
+@media (hover: hover) and (min-width: 1024px) { body[data-ba-view="h"].ba-h-open .ba-h-backdrop { pointer-events: none; } }
 body[data-ba-view="h"] .ba-h-panel { display: flex; flex-direction: column; position: fixed; z-index: 2147483001; background: #fff;
   font-family: Inter, system-ui, sans-serif; color: var(--c-text); visibility: hidden; opacity: 0;
   transition: opacity .2s var(--ba-ease), transform .25s var(--ba-ease), visibility 0s .25s; }
@@ -268,7 +270,6 @@ body[data-ba-view="h"].ba-h-open .ba-h-panel { visibility: visible; opacity: 1; 
 }
 /* mobile/tablet: bottom sheet */
 @media (max-width: 1023px) {
-  body[data-ba-view="h"].ba-h-open .ba-h-backdrop { background: rgb(0 0 0 / .32); }
   body[data-ba-view="h"] .ba-h-panel { left: 0; right: 0; bottom: 0; max-height: 78vh; padding: 8px 8px max(12px, env(safe-area-inset-bottom));
     border-radius: 18px 18px 0 0; box-shadow: 0 -8px 32px rgb(0 0 0 / .16); transform: translateY(24px); }
   .ba-h-grab { display: block; width: 36px; height: 4px; margin: 0 auto 8px; border-radius: 4px; background: #d4d4d4; }

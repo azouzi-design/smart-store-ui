@@ -432,13 +432,24 @@
   const themed = [...document.querySelectorAll("[style]")].find((el) => el.getAttribute("style").includes("--c-primary")) || document.body;
   themed.append(hBackdrop, hPanel);
   let hTab = null;
-  function renderH() {
-    const name = deptLabel(curDept);
+  // Renders any department's list (hover previews a department without switching to it).
+  // Picking an item switches department if needed, then filters.
+  function renderH(key = curDept) {
+    const name = deptLabel(key);
+    const d = deptData(key);
     hTitle.textContent = name;
     hPanel.setAttribute("aria-label", `${name} types`);
-    hList.replaceChildren(...[{ ...all, label: `All ${name}` }, ...cats].map((c) => {
-      const b = btn(c, "ba-h-item", h("span", { class: "ba-h-label" }, c.label), h("span", { class: "ba-h-n" }, fmt(c.count)), icon("check", "ba-ico ba-h-check"));
-      b.addEventListener("click", () => setTimeout(closeH, 120));
+    hList.replaceChildren(...[{ key: "all", label: `All ${name}`, count: d.total }, ...d.cats].map((c) => {
+      const on = key === curDept && c.key === active;
+      const b = h("button", {
+        type: "button", class: "ba-h-item" + (on ? " is-on" : ""), "aria-pressed": String(on),
+        "aria-label": `${c.label}, ${fmt(c.count)} items`,
+        onclick: () => {
+          if (key !== curDept) setDept(key);
+          if (c.key !== "all") apply(c.key);
+          setTimeout(closeH, 120);
+        },
+      }, h("span", { class: "ba-h-label" }, c.label), h("span", { class: "ba-h-n" }, fmt(c.count)), icon("check", "ba-ico ba-h-check"));
       return b;
     }));
   }
@@ -450,7 +461,9 @@
     hPanel.style.setProperty("--ba-h-top", Math.max(80, Math.min(r.top - 8, innerHeight - hPanel.offsetHeight - 16)) + "px");
   }
   function openH(tab, viaKeyboard) {
+    clearTimeout(hTimer);
     hTab = tab;
+    renderH(tab.dataset.tab);
     document.body.classList.add("ba-h-open");
     dtabs.forEach((t) => t.setAttribute("aria-expanded", t === tab));
     placeH();
@@ -463,6 +476,24 @@
   }
   addEventListener("keydown", (e) => {
     if (e.key === "Escape" && document.body.classList.contains("ba-h-open")) { closeH(); hTab?.focus(); }
+  });
+  // Desktop with a mouse: hovering a department opens its sub-menu right away; no dimmed backdrop.
+  const canHover = matchMedia("(hover: hover) and (min-width: 1024px)");
+  let hTimer;
+  const hoverMode = () => isView("h") && canHover.matches;
+  const closeSoon = () => { clearTimeout(hTimer); hTimer = setTimeout(closeH, 180); }; // grace period to cross the gap
+  dtabs.forEach((t) => {
+    t.addEventListener("mouseenter", () => {
+      if (!hoverMode()) return;
+      if (deptData(t.dataset.tab).cats.length) openH(t, false);
+      else closeSoon();
+    });
+    t.addEventListener("mouseleave", () => hoverMode() && closeSoon());
+  });
+  hPanel.addEventListener("mouseenter", () => clearTimeout(hTimer));
+  hPanel.addEventListener("mouseleave", () => hoverMode() && closeSoon());
+  document.addEventListener("click", (e) => {
+    if (hoverMode() && !hPanel.contains(e.target) && !e.target.closest(".shop-side .dtab")) closeH();
   });
   addEventListener("resize", () => document.body.classList.contains("ba-h-open") && placeH());
   addEventListener("scroll", () => document.body.classList.contains("ba-h-open") && innerWidth >= 1024 && placeH(), { passive: true });
@@ -481,7 +512,7 @@
       else renderG();
       if (isView("h") && !cats.length) closeH(); // e.g. Recommended For You: nothing to choose
       else if (isView("h")) {
-        if (!switching && document.body.classList.contains("ba-h-open")) closeH();
+        if (!switching && document.body.classList.contains("ba-h-open") && !hoverMode()) closeH();
         else openH(t, e.detail === 0); // opening a department opens its overlay
       }
     });
